@@ -1,0 +1,1 @@
+﻿Mets ici l'image du QR code de l'hotel, puis renseigne hotel.qrImage dans js/config.js

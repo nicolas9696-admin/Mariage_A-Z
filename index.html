@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notre mariage</title>
+<meta name="description" content="Toutes les informations et le formulaire de présence pour notre mariage.">
+<meta name="theme-color" content="#1f3d2b">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&family=Allura&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ================= ÉCRAN D'OUVERTURE ================= -->
+<div class="curtain" id="curtain">
+  <div class="curtain__inner">
+    <span class="curtain__monogram" data-monogram></span>
+    <span class="curtain__line"></span>
+  </div>
+</div>
+
+<!-- ================= NAVIGATION ================= -->
+<header class="nav" id="nav">
+  <a href="#accueil" class="nav__brand" data-monogram></a>
+
+  <button class="nav__burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="nav__links" id="navLinks">
+    <a href="#histoire">Le jour J</a>
+    <a href="#programme">Programme</a>
+    <a href="#galerie">Photos</a>
+    <a href="#hotel">Hébergement</a>
+    <a href="#rsvp" class="nav__cta">Je réponds</a>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="accueil">
+  <div class="hero__leaves" aria-hidden="true"></div>
+  <div class="hero__vignette" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <p class="hero__kicker">Nous nous marions</p>
+
+    <h1 class="hero__names">
+      <span class="hero__name" data-mariee></span>
+      <span class="hero__amp">&amp;</span>
+      <span class="hero__name" data-marie></span>
+    </h1>
+
+    <div class="ornament" aria-hidden="true">
+      <span class="ornament__line"></span>
+      <svg viewBox="0 0 40 24" class="ornament__rings">
+      <circle cx="15" cy="12" r="8"/>
+      <circle cx="25" cy="12" r="8"/>
+      <!-- petit arc redessiné : donne l'effet d'entrelacement -->
+      <path d="M17.7 4.5 A8 8 0 0 1 21.6 7.4"/>
+    </svg>
+      <span class="ornament__line"></span>
+    </div>
+
+    <p class="hero__date" data-date-texte></p>
+    <p class="hero__lieu" data-lieu></p>
+
+    <!-- Compte à rebours -->
+    <div class="countdown" id="countdown" aria-label="Compte à rebours">
+      <div class="countdown__unit"><b id="cd-j">--</b><span>jours</span></div>
+      <div class="countdown__unit"><b id="cd-h">--</b><span>heures</span></div>
+      <div class="countdown__unit"><b id="cd-m">--</b><span>minutes</span></div>
+      <div class="countdown__unit"><b id="cd-s">--</b><span>secondes</span></div>
+    </div>
+
+    <a href="#rsvp" class="btn btn--gold hero__btn">Confirmer ma présence</a>
+  </div>
+
+  <a href="#histoire" class="hero__scroll" aria-label="Descendre">
+    <span></span>
+  </a>
+</section>
+
+<!-- ================= MOT D'ACCUEIL ================= -->
+<section class="section section--cream" id="histoire">
+  <div class="wrap wrap--narrow center">
+    <p class="eyebrow reveal">Bienvenue</p>
+    <h2 class="h2 reveal">Le jour J</h2>
+    <p class="lead reveal" data-mot-accueil></p>
+  </div>
+
+  <div class="wrap">
+    <div class="cards">
+      <article class="card reveal">
+        <svg class="card__icon" viewBox="0 0 24 24"><path d="M7 2v4M17 2v4M3 9h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+        <h3>Quand</h3>
+        <p data-date-texte></p>
+        <p class="card__sub" data-heure></p>
+      </article>
+
+      <article class="card reveal">
+        <svg class="card__icon" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <h3>Où</h3>
+        <p data-lieu-nom></p>
+        <p class="card__sub" data-lieu-adresse></p>
+        <a class="card__link" data-maps target="_blank" rel="noopener">Voir sur la carte</a>
+      </article>
+
+      <article class="card reveal">
+        <!-- cintre -->
+        <svg class="card__icon" viewBox="0 0 24 24">
+          <path d="M12 10V9a2 2 0 1 1 2-2"/>
+          <path d="M12 10 3.2 15.6c-1 .6-.5 2.1.6 2.1h16.4c1.1 0 1.6-1.5.6-2.1L12 10z"/>
+        </svg>
+        <h3>Dress code</h3>
+        <p>Tenue de cérémonie</p>
+        <p class="card__sub">Ni blanc ni vert, réservés aux mariés.</p>
+      </article>
+
+      <article class="card reveal">
+        <!-- patte d'animal barrée -->
+        <svg class="card__icon" viewBox="0 0 24 24">
+          <g class="icon-plein">
+            <ellipse cx="5.9" cy="8.6" rx="2.1" ry="2.7"/>
+            <ellipse cx="12" cy="6.9" rx="2.1" ry="2.8"/>
+            <ellipse cx="18.1" cy="8.6" rx="2.1" ry="2.7"/>
+            <path d="M12 12.2c3.5 0 6 2.6 6 4.8 0 2.1-2.4 3.2-6 3.2s-6-1.1-6-3.2c0-2.2 2.5-4.8 6-4.8z"/>
+          </g>
+          <path class="icon-entaille" d="M3.5 20.5 20.5 3.5"/>
+          <path d="M3.5 20.5 20.5 3.5"/>
+        </svg>
+        <h3>À noter</h3>
+        <p>Sans animaux</p>
+        <p class="card__sub">Nos amis à quatre pattes restent à la maison.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMME ================= -->
+<section class="section section--green" id="programme">
+  <div class="wrap wrap--narrow center">
+    <p class="eyebrow eyebrow--light reveal">Déroulé de la journée</p>
+    <h2 class="h2 h2--light reveal">Programme</h2>
+  </div>
+
+  <ol class="timeline wrap wrap--narrow" id="timeline"></ol>
+</section>
+
+<!-- ================= GALERIE ================= -->
+<section class="section section--cream" id="galerie">
+  <div class="wrap wrap--narrow center">
+    <p class="eyebrow reveal">Souvenirs</p>
+    <h2 class="h2 reveal">Nos photos</h2>
+    <p class="lead reveal">Quelques moments qui nous ont menés jusqu'ici.</p>
+  </div>
+
+  <div class="gallery wrap" id="gallery"></div>
+</section>
+
+<!-- ================= HÔTEL / QR ================= -->
+<section class="section section--green" id="hotel">
+  <div class="wrap wrap--narrow center">
+    <p class="eyebrow eyebrow--light reveal">Sur place</p>
+    <h2 class="h2 h2--light reveal">Hébergement</h2>
+    <p class="lead lead--light reveal" data-hotel-nom></p>
+    <p class="lead lead--light reveal" data-hotel-texte></p>
+
+    <div class="qr reveal" id="qrBlock"></div>
+  </div>
+</section>
+
+<!-- ================= RSVP ================= -->
+<section class="section section--cream" id="rsvp">
+  <div class="wrap wrap--form">
+    <div class="center">
+      <p class="eyebrow reveal">Réponse souhaitée avant le <span data-deadline></span></p>
+      <h2 class="h2 reveal">Formulaire de présence</h2>
+      <p class="lead reveal">Merci de remplir un formulaire par foyer.</p>
+      <p class="lead reveal">Seules les personnes présentes sont à inscrire.</p>
+    </div>
+
+    <form class="form reveal" id="rsvpForm" novalidate>
+
+      <div class="field">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email" required
+               placeholder="marie.dupont@email.com">
+        <small class="err" data-err-for="email"></small>
+      </div>
+
+      <div id="blocPresent">
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="adultes">Adultes <span class="req">*</span> <em class="lbl-note">dès 10 ans</em></label>
+            <div class="stepper">
+              <button type="button" class="stepper__btn" data-step="adultes" data-dir="-1" aria-label="Moins">−</button>
+              <input type="number" id="adultes" name="adultes" min="0" max="20" value="1" inputmode="numeric">
+              <button type="button" class="stepper__btn" data-step="adultes" data-dir="1" aria-label="Plus">+</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="enfants">Enfants <em class="lbl-note">de 2 à 10 ans</em></label>
+            <div class="stepper">
+              <button type="button" class="stepper__btn" data-step="enfants" data-dir="-1" aria-label="Moins">−</button>
+              <input type="number" id="enfants" name="enfants" min="0" max="20" value="0" inputmode="numeric">
+              <button type="button" class="stepper__btn" data-step="enfants" data-dir="1" aria-label="Plus">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Champs générés automatiquement selon les compteurs ci-dessus -->
+        <div class="field" id="champAdultes">
+          <label>Qui sera présent ? <span class="req">*</span></label>
+          <div class="invites" id="listeAdultes"></div>
+          <small class="err" data-err-for="invites"></small>
+        </div>
+
+        <div class="field" id="champEnfants" hidden>
+          <label>Les enfants <span class="req">*</span></label>
+          <div class="invites" id="listeEnfants"></div>
+          <small class="hint">L'âge nous permet de prévoir les menus adaptés.</small>
+        </div>
+
+        <div class="field">
+          <label for="allergies">Allergies, intolérances ou régime particulier</label>
+          <textarea id="allergies" name="allergies" rows="3"
+                    placeholder="Ex. : sans gluten pour Paul, allergie aux fruits à coque pour Léa. Indiquez « aucune » si rien de particulier."></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="message">Un petit mot pour les mariés</label>
+        <textarea id="message" name="message" rows="3" placeholder="Facultatif"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn--gold btn--full" id="submitBtn">
+        <span class="btn__label">Envoyer ma réponse</span>
+        <span class="btn__spinner" aria-hidden="true"></span>
+      </button>
+
+      <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+    </form>
+
+    <!-- Écran de confirmation -->
+    <div class="thanks" id="thanks" hidden>
+      <svg class="thanks__check" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-16"/></svg>
+      <h3>Merci !</h3>
+      <p id="thanksMsg"></p>
+      <button type="button" class="btn btn--ghost" id="againBtn">Envoyer une autre réponse</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PIED DE PAGE ================= -->
+<footer class="footer">
+  <div class="ornament ornament--light" aria-hidden="true">
+    <span class="ornament__line"></span>
+    <svg viewBox="0 0 40 24" class="ornament__rings">
+      <circle cx="15" cy="12" r="8"/>
+      <circle cx="25" cy="12" r="8"/>
+      <!-- petit arc redessiné : donne l'effet d'entrelacement -->
+      <path d="M17.7 4.5 A8 8 0 0 1 21.6 7.4"/>
+    </svg>
+    <span class="ornament__line"></span>
+  </div>
+  <p class="footer__names" data-monogram></p>
+  <p class="footer__date" data-date-texte></p>
+  <p class="footer__contact" id="footerContact"></p>
+</footer>
+
+<!-- ================= LIGHTBOX GALERIE ================= -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox__close" aria-label="Fermer">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" aria-label="Précédente">&#8249;</button>
+  <img id="lightboxImg" alt="">
+  <button class="lightbox__nav lightbox__nav--next" aria-label="Suivante">&#8250;</button>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
