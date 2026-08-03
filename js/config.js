@@ -57,7 +57,7 @@ window.MARIAGE = {
   /* ---------- Formulaire RSVP ---------- */
   // URL du script Google Apps Script déployé en « application web ».
   // Voir README.md, étape 2. Tant que c'est vide, le formulaire est en mode démo.
-  rsvpEndpoint: "",
+  rsvpEndpoint: "https://script.google.com/macros/s/AKfycbw6GbOGxhqQ3SQqlFyW9SCJut9x1T8-J6lpS-YNmW4Zlc2EscUxpN3ppCLsOCu13Q1_/exec",
 
   // Date limite de réponse
   rsvpDeadline: "1er mars 2027",   // TODO
