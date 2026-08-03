@@ -28,12 +28,16 @@ C'est le seul fichier à toucher. Le reste du site se met à jour tout seul.
 
 1. Crée un Google Sheet vide (nomme-le « RSVP Mariage »).
 2. Dans ce Sheet : **Extensions → Apps Script**.
-3. Supprime le code présent, colle tout le contenu de `google-apps-script/Code.gs`, puis **Enregistrer**.
-4. Clique **Déployer → Nouveau déploiement**.
+3. Supprime le code présent, colle tout le contenu de `google-apps-script/Code.gs`, puis **Enregistrer** (💾).
+4. **⚠️ Étape à ne pas sauter** — lance la fonction d'installation une fois :
+   en haut de l'éditeur, choisis la fonction **`installer`** dans le menu déroulant,
+   puis clique **▶ Exécuter**. Autorise l'accès quand Google le demande
+   (« Paramètres avancés → Accéder à … » : c'est normal, le script est le tien).
+   Cela enregistre ta feuille et crée l'onglet **Réponses** avec ses colonnes.
+5. Clique **Déployer → Nouveau déploiement**.
    - Type : **Application Web**
    - Exécuter en tant que : **Moi**
    - Qui a accès : **Tout le monde** ← indispensable, sinon les invités ne peuvent pas envoyer
-5. Autorise l'accès quand Google le demande (passe par « Paramètres avancés → Accéder à … » : c'est normal, le script est le tien).
 6. Copie l'**URL de l'application web** (elle finit par `/exec`).
 7. Colle-la dans `js/config.js` :
 
@@ -41,12 +45,20 @@ C'est le seul fichier à toucher. Le reste du site se met à jour tout seul.
 rsvpEndpoint: "https://script.google.com/macros/s/AKfy.../exec",
 ```
 
-Pour vérifier : ouvre cette URL dans ton navigateur, tu dois voir
-`{"ok":true,"message":"Le script du mariage fonctionne."}`.
+**Vérifier que l'écriture marche** — ajoute `?test=1` à la fin de ton URL et ouvre-la
+dans le navigateur :
 
-L'onglet « Réponses » et ses colonnes sont créés automatiquement à la première réponse :
+```
+https://script.google.com/macros/s/AKfy.../exec?test=1
+```
 
-| Date | Nom et prénom | Email | Présence | Nb adultes | Nb enfants | Total | Prénoms | Allergies | Message |
+Tu dois voir `{"ok":true,"message":"Ligne de test écrite..."}` **et** une ligne
+« TEST (ligne à supprimer) » apparaître dans l'onglet Réponses. Supprime-la ensuite.
+Si tu vois `{"ok":false,"error":...}`, l'erreur t'indique quoi corriger.
+
+Colonnes créées :
+
+| Date | Contact | Email | Nb adultes | Nb enfants | Total | Adultes | Enfants | Allergies | Message |
 
 > Tant que `rsvpEndpoint` est vide, le formulaire tourne en **mode démo** :
 > il affiche bien l'écran de remerciement mais n'enregistre rien.
@@ -55,7 +67,7 @@ L'onglet « Réponses » et ses colonnes sont créés automatiquement à la prem
 **Outils → Règles de notification → M'avertir immédiatement**.
 
 **Important** : si tu modifies `Code.gs` plus tard, refais
-**Déployer → Gérer les déploiements → ✏️ → Version : Nouvelle version**,
+**Déployer → Gérer les déploiements → ✏️ (crayon) → Version : Nouvelle version → Déployer**,
 sinon l'ancienne version reste active.
 
 ---
