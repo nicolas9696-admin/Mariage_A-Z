@@ -13,9 +13,12 @@ var ENTETES = [
   'Date de réponse',
   'Contact',
   'Email',
+  'Téléphone',
+  'Adresse',
   'Nb adultes',
   'Nb enfants',
   'Total personnes',
+  'Hébergement hôtel',
   'Adultes (dès 10 ans)',
   'Enfants (2 à 10 ans)',
   'Allergies / intolérances',
@@ -68,7 +71,8 @@ function doGet(e) {
       ecrireLigne_({
         date: new Date().toLocaleString('fr-FR'),
         nom: 'TEST (ligne à supprimer)', email: 'test@exemple.com',
-        adultes: 2, enfants: 1,
+        telephone: '079 000 00 00', adresse: 'Rue de Test 1, 1000 Lausanne',
+        adultes: 2, enfants: 1, hotel: 'Oui, va réserver',
         listeAdultes: 'Adulte Un, Adulte Deux', listeEnfants: 'Enfant Un (5 ans)',
         allergies: 'aucune', message: 'Écriture de test réussie ✔'
       });
@@ -93,13 +97,16 @@ function lireReponses_() {
       date: String(r[0] || ''),
       contact: String(r[1] || ''),
       email: String(r[2] || ''),
-      adultes: Number(r[3]) || 0,
-      enfants: Number(r[4]) || 0,
-      total: Number(r[5]) || 0,
-      listeAdultes: String(r[6] || ''),
-      listeEnfants: String(r[7] || ''),
-      allergies: String(r[8] || ''),
-      message: String(r[9] || '')
+      telephone: String(r[3] || ''),
+      adresse: String(r[4] || ''),
+      adultes: Number(r[5]) || 0,
+      enfants: Number(r[6]) || 0,
+      total: Number(r[7]) || 0,
+      hotel: String(r[8] || ''),
+      listeAdultes: String(r[9] || ''),
+      listeEnfants: String(r[10] || ''),
+      allergies: String(r[11] || ''),
+      message: String(r[12] || '')
     };
   });
 }
@@ -112,8 +119,8 @@ function ecrireLigne_(d) {
 
   feuille.appendRow([
     d.date || new Date().toLocaleString('fr-FR'),
-    d.nom || '', d.email || '',
-    adultes, enfants, adultes + enfants,
+    d.nom || '', d.email || '', d.telephone || '', d.adresse || '',
+    adultes, enfants, adultes + enfants, d.hotel || '',
     d.listeAdultes || '', d.listeEnfants || '',
     d.allergies || '', d.message || ''
   ]);
@@ -130,9 +137,10 @@ function getFeuille_() {
       .setFontWeight('bold').setBackground('#55764c').setFontColor('#f3e3ae');
     feuille.setFrozenRows(1);
     feuille.setColumnWidth(1, 160); feuille.setColumnWidth(2, 190);
-    feuille.setColumnWidth(3, 220); feuille.setColumnWidth(7, 240);
-    feuille.setColumnWidth(8, 240); feuille.setColumnWidth(9, 280);
-    feuille.setColumnWidth(10, 300);
+    feuille.setColumnWidth(3, 210); feuille.setColumnWidth(4, 130);
+    feuille.setColumnWidth(5, 260); feuille.setColumnWidth(9, 150);
+    feuille.setColumnWidth(10, 240); feuille.setColumnWidth(11, 240);
+    feuille.setColumnWidth(12, 280); feuille.setColumnWidth(13, 300);
   }
   return feuille;
 }

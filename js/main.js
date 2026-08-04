@@ -272,11 +272,18 @@
 
   function valider() {
     let ok = true;
-    ["email", "invites"].forEach(c => erreur(c, ""));
+    ["email", "telephone", "adresse", "hotel", "invites"].forEach(c => erreur(c, ""));
 
     const mail = form.email.value.trim();
     if (!mail) { erreur("email", "Merci d'indiquer votre email."); ok = false; }
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { erreur("email", "Cet email ne semble pas valide."); ok = false; }
+
+    if (!form.telephone.value.trim()) { erreur("telephone", "Merci d'indiquer un numéro de téléphone."); ok = false; }
+    if (!form.adresse.value.trim()) { erreur("adresse", "Merci d'indiquer votre adresse postale."); ok = false; }
+
+    if (!form.querySelector('input[name="hotel"]:checked')) {
+      erreur("hotel", "Indiquez si vous réservez une chambre à l'hôtel."); ok = false;
+    }
 
     if (Number(form.adultes.value) + Number(form.enfants.value) < 1) {
       erreur("invites", "Indiquez au moins une personne présente.");
@@ -319,6 +326,9 @@
       date: new Date().toLocaleString("fr-FR"),
       nom: nomsAdultes[0] || nomsEnfants[0] || "",   // contact principal
       email: form.email.value.trim(),
+      telephone: form.telephone.value.trim(),
+      adresse: form.adresse.value.trim(),
+      hotel: (form.querySelector('input[name="hotel"]:checked') || {}).value || "",
       adultes: Number(form.adultes.value),
       enfants: Number(form.enfants.value),
       listeAdultes: nomsAdultes.join(", "),
@@ -365,7 +375,7 @@
   $("#againBtn").addEventListener("click", () => {
     form.reset();
     majInvites();
-    ["email", "invites"].forEach(c => erreur(c, ""));
+    ["email", "telephone", "adresse", "hotel", "invites"].forEach(c => erreur(c, ""));
     merci.hidden = true;
     form.hidden = false;
     form.scrollIntoView({ block: "center", behavior: "smooth" });

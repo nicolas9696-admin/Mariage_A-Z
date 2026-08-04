@@ -194,6 +194,21 @@
         <small class="err" data-err-for="email"></small>
       </div>
 
+      <div class="field">
+        <label for="telephone">Téléphone <span class="req">*</span></label>
+        <input type="tel" id="telephone" name="telephone" autocomplete="tel" required
+               placeholder="079 123 45 67">
+        <small class="err" data-err-for="telephone"></small>
+      </div>
+
+      <div class="field">
+        <label for="adresse">Adresse postale <span class="req">*</span></label>
+        <input type="text" id="adresse" name="adresse" autocomplete="street-address" required
+               placeholder="Rue et n°, code postal, ville, pays">
+        <small class="hint">Pour vous envoyer un petit souvenir et rester en contact.</small>
+        <small class="err" data-err-for="adresse"></small>
+      </div>
+
       <div id="blocPresent">
 
         <div class="grid-2">
@@ -228,6 +243,25 @@
           <div class="invites" id="listeEnfants"></div>
           <small class="hint">L'âge nous permet de prévoir les menus adaptés.</small>
         </div>
+
+        <fieldset class="field field--choice">
+          <legend>Hébergement à l'hôtel <span class="req">*</span></legend>
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="hotel" value="Oui, va réserver" required>
+              <span>Oui, je vais réserver une chambre</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="hotel" value="Déjà réservé">
+              <span>C'est déjà réservé</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="hotel" value="Non">
+              <span>Non, je ne dors pas sur place</span>
+            </label>
+          </div>
+          <small class="err" data-err-for="hotel"></small>
+        </fieldset>
 
         <div class="field">
           <label for="allergies">Allergies, intolérances ou régime particulier</label>

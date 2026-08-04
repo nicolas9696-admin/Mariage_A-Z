@@ -131,20 +131,26 @@
     // Tableau
     html += '<h2 class="section-titre">Détail des réponses</h2>';
     html += '<div class="tablewrap"><table><thead><tr>' +
-      '<th>Contact</th><th>Adultes</th><th>Enfants</th><th>Personnes présentes</th>' +
-      '<th>Allergies</th><th>Message</th><th>Reçu le</th></tr></thead><tbody>';
+      '<th>Contact</th><th>Coordonnées</th><th>Adultes</th><th>Enfants</th><th>Personnes présentes</th>' +
+      '<th>Hôtel</th><th>Allergies</th><th>Message</th><th>Reçu le</th></tr></thead><tbody>';
 
     invites.forEach(function (i) {
       var noms = [];
       if (i.listeAdultes) noms.push(esc(i.listeAdultes));
       if (i.listeEnfants) noms.push('<span class="mini">Enfants : ' + esc(i.listeEnfants) + '</span>');
 
+      var coord = [];
+      if (i.email) coord.push('<span class="mini">' + esc(i.email) + '</span>');
+      if (i.telephone) coord.push('<span class="mini">' + esc(i.telephone) + '</span>');
+      if (i.adresse) coord.push('<span class="mini">' + esc(i.adresse) + '</span>');
+
       html += '<tr>' +
-        '<td><span class="nom-fort">' + esc(i.contact || "—") + '</span>' +
-          (i.email ? '<br><span class="mini">' + esc(i.email) + '</span>' : '') + '</td>' +
+        '<td><span class="nom-fort">' + esc(i.contact || "—") + '</span></td>' +
+        '<td>' + (coord.join("<br>") || "—") + '</td>' +
         '<td class="num">' + i.adultes + '</td>' +
         '<td class="num">' + i.enfants + '</td>' +
         '<td>' + (noms.join("<br>") || "—") + '</td>' +
+        '<td>' + (i.hotel ? esc(i.hotel) : '<span class="mini">—</span>') + '</td>' +
         '<td>' + (aReellementAllergie(i.allergies)
                     ? '<span class="badge-al">' + esc(i.allergies) + '</span>'
                     : '<span class="mini">—</span>') + '</td>' +
@@ -171,10 +177,12 @@
 
   $("#export").addEventListener("click", function () {
     if (!dernieres.length) return;
-    var entetes = ["Date", "Contact", "Email", "Adultes", "Enfants", "Total",
+    var entetes = ["Date", "Contact", "Email", "Téléphone", "Adresse",
+                   "Adultes", "Enfants", "Total", "Hébergement hôtel",
                    "Noms adultes", "Noms enfants", "Allergies", "Message"];
     var lignes = dernieres.map(function (i) {
-      return [i.date, i.contact, i.email, i.adultes, i.enfants, i.total,
+      return [i.date, i.contact, i.email, i.telephone, i.adresse,
+              i.adultes, i.enfants, i.total, i.hotel,
               i.listeAdultes, i.listeEnfants, i.allergies, i.message].map(csvCase);
     });
     var csv = "﻿" + [entetes.map(csvCase).join(";")]

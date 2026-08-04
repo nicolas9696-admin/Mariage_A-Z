@@ -17,6 +17,7 @@
 
   /* --- Écran mot de passe --- */
   .gate{min-height:100vh;display:grid;place-items:center;padding:24px}
+  [hidden]{display:none!important}   /* l'attribut hidden doit toujours l'emporter */
   .gate__card{
     background:var(--papier);border:1px solid rgba(61,87,56,.14);
     border-radius:4px;padding:clamp(30px,5vw,52px);max-width:420px;width:100%;
