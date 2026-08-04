@@ -159,10 +159,18 @@
 
   /* ------------------------------------------------------ 8. Contact */
   const fc = $("#footerContact");
-  const bits = [];
-  if (C.contactEmail) bits.push(`<a href="mailto:${esc(C.contactEmail)}">${esc(C.contactEmail)}</a>`);
-  if (C.contactTel) bits.push(`<a href="tel:${esc(C.contactTel.replace(/\s/g, ""))}">${esc(C.contactTel)}</a>`);
-  fc.innerHTML = bits.length ? "Une question ? " + bits.join(" &nbsp;·&nbsp; ") : "";
+  const mc = C.maitresCeremonie || [];
+  if (mc.length) {
+    const gens = mc.map(p =>
+      `<a href="tel:${esc((p.tel || "").replace(/\s/g, ""))}">${esc(p.nom)} — ${esc(p.tel)}</a>`
+    ).join(" &nbsp;·&nbsp; ");
+    fc.innerHTML = (C.contactTexte ? `<span class="footer__contact-intro">${esc(C.contactTexte)}</span><br>` : "") + gens;
+  } else {
+    const bits = [];
+    if (C.contactEmail) bits.push(`<a href="mailto:${esc(C.contactEmail)}">${esc(C.contactEmail)}</a>`);
+    if (C.contactTel) bits.push(`<a href="tel:${esc(C.contactTel.replace(/\s/g, ""))}">${esc(C.contactTel)}</a>`);
+    fc.innerHTML = bits.length ? "Une question ? " + bits.join(" &nbsp;·&nbsp; ") : "";
+  }
 
   /* --------------------------------------------------- 9. Navigation */
   const nav = $("#nav"), burger = $("#burger");
@@ -251,6 +259,71 @@
     champEnfants.hidden = nbEnfants === 0;
   }
 
+  /* --- NPA suisse -> localité remplie automatiquement --- */
+  var npaHint = $("#npaHint");
+  var npaTimer;
+
+  function estSuisse() {
+    var p = (form.pays.value || "").trim().toLowerCase();
+    return p === "" || p === "suisse" || p === "switzerland" || p === "schweiz" || p === "svizzera" || p === "ch";
+  }
+
+  form.npa.addEventListener("input", function () {
+    form.npa.value = form.npa.value.replace(/\D/g, "").slice(0, 6);
+    clearTimeout(npaTimer);
+    npaHint.textContent = "";
+    if (estSuisse() && form.npa.value.length === 4) {
+      npaHint.textContent = "Recherche de la localité…";
+      npaTimer = setTimeout(function () { chercherLocalite(form.npa.value); }, 250);
+    }
+  });
+
+  // si le pays change, relancer (ou couper) l'auto-remplissage suisse
+  form.pays.addEventListener("change", function () {
+    if (estSuisse() && form.npa.value.length === 4 &&
+        (!form.localite.value.trim() || form.localite.dataset.auto === "1")) {
+      chercherLocalite(form.npa.value);
+    } else if (!estSuisse()) {
+      npaHint.textContent = "";
+      if (form.localite.dataset.auto === "1") { form.localite.value = ""; form.localite.dataset.auto = ""; }
+    }
+  });
+
+  // si l'invité écrit lui-même la localité, on ne l'écrase plus
+  form.localite.addEventListener("input", function () { form.localite.dataset.auto = ""; });
+
+  function chercherLocalite(code) {
+    fetch("https://openplzapi.org/ch/Localities?postalCode=" + code)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var communes = [];
+        (data || []).forEach(function (x) {
+          var n = (x.commune && x.commune.name) || x.name;
+          if (n && communes.indexOf(n) === -1) communes.push(n);
+        });
+        if (!communes.length) {
+          npaHint.textContent = "NPA inconnu — saisissez la localité à la main.";
+          return;
+        }
+        // remplit tant que l'invité n'a pas tapé sa propre valeur
+        if (!form.localite.value.trim() || form.localite.dataset.auto === "1") {
+          form.localite.value = communes[0];
+          form.localite.dataset.auto = "1";
+        }
+        npaHint.textContent = communes.length > 1
+          ? "Autres localités possibles : " + communes.slice(0, 4).join(", ")
+          : "";
+      })
+      .catch(function () { npaHint.textContent = ""; }); // silencieux : saisie manuelle possible
+  }
+
+  /* --- Case « je souhaite préparer une animation » --- */
+  var blocAnim = $("#blocAnim");
+  form.veutAnimer.addEventListener("change", function () {
+    blocAnim.classList.toggle("is-open", form.veutAnimer.checked);
+    if (!form.veutAnimer.checked) erreur("animation", "");
+  });
+
   // Boutons + / −
   $$(".stepper__btn").forEach(b =>
     b.addEventListener("click", () => {
@@ -272,14 +345,21 @@
 
   function valider() {
     let ok = true;
-    ["email", "telephone", "adresse", "hotel", "invites"].forEach(c => erreur(c, ""));
+    ["email", "telephone", "adresse", "pays", "npa", "localite", "hotel", "invites"].forEach(c => erreur(c, ""));
 
     const mail = form.email.value.trim();
     if (!mail) { erreur("email", "Merci d'indiquer votre email."); ok = false; }
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { erreur("email", "Cet email ne semble pas valide."); ok = false; }
 
     if (!form.telephone.value.trim()) { erreur("telephone", "Merci d'indiquer un numéro de téléphone."); ok = false; }
-    if (!form.adresse.value.trim()) { erreur("adresse", "Merci d'indiquer votre adresse postale."); ok = false; }
+    if (!form.adresse.value.trim()) { erreur("adresse", "Merci d'indiquer votre rue et numéro."); ok = false; }
+    if (!form.pays.value.trim()) { erreur("pays", "Merci d'indiquer le pays."); ok = false; }
+    if (form.npa.value.trim().length < 4) { erreur("npa", "Code postal invalide."); ok = false; }
+    if (!form.localite.value.trim()) { erreur("localite", "Merci d'indiquer la localité."); ok = false; }
+
+    if (form.veutAnimer.checked && !form.animation.value.trim()) {
+      erreur("animation", "Décrivez votre idée, ou décochez la case."); ok = false;
+    }
 
     if (!form.querySelector('input[name="hotel"]:checked')) {
       erreur("hotel", "Indiquez si vous réservez une chambre à l'hôtel."); ok = false;
@@ -327,7 +407,8 @@
       nom: nomsAdultes[0] || nomsEnfants[0] || "",   // contact principal
       email: form.email.value.trim(),
       telephone: form.telephone.value.trim(),
-      adresse: form.adresse.value.trim(),
+      adresse: form.adresse.value.trim() + ", " + form.npa.value.trim() + " " +
+               form.localite.value.trim() + ", " + form.pays.value.trim(),
       hotel: (form.querySelector('input[name="hotel"]:checked') || {}).value || "",
       adultes: Number(form.adultes.value),
       enfants: Number(form.enfants.value),
@@ -375,7 +456,7 @@
   $("#againBtn").addEventListener("click", () => {
     form.reset();
     majInvites();
-    ["email", "telephone", "adresse", "hotel", "invites"].forEach(c => erreur(c, ""));
+    ["email", "telephone", "adresse", "pays", "npa", "localite", "hotel", "invites"].forEach(c => erreur(c, ""));
     merci.hidden = true;
     form.hidden = false;
     form.scrollIntoView({ block: "center", behavior: "smooth" });

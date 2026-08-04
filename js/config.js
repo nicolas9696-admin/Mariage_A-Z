@@ -67,9 +67,13 @@ window.MARIAGE = {
   rsvpEndpoint: "https://script.google.com/macros/s/AKfycbw6GbOGxhqQ3SQqlFyW9SCJut9x1T8-J6lpS-YNmW4Zlc2EscUxpN3ppCLsOCu13Q1_/exec",
 
   // Date limite de réponse
-  rsvpDeadline: "1er mars 2027",   // TODO
+  rsvpDeadline: "1er mai 2027",
 
-  /* ---------- Contact ---------- */
-  contactEmail: "",   // ex. "mariage.az@gmail.com"
-  contactTel: ""      // ex. "06 12 34 56 78"
+  /* ---------- Contact / maîtres de cérémonie ---------- */
+  // Pour les invités qui veulent organiser une surprise, un discours, etc.
+  contactTexte: "Une surprise, un discours ou un coup de main à organiser ? Nos maîtres de cérémonie sont là pour vous :",
+  maitresCeremonie: [
+    { nom: "Aliya Hurlimann", tel: "+41 79 935 41 49" },
+    { nom: "Allya Monnat",   tel: "+41 77 495 26 85" }
+  ]
 };

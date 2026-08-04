@@ -202,11 +202,45 @@
       </div>
 
       <div class="field">
-        <label for="adresse">Adresse postale <span class="req">*</span></label>
+        <label for="adresse">Adresse <span class="req">*</span></label>
         <input type="text" id="adresse" name="adresse" autocomplete="street-address" required
-               placeholder="Rue et n°, code postal, ville, pays">
+               placeholder="Rue et numéro">
         <small class="hint">Pour vous envoyer un petit souvenir et rester en contact.</small>
         <small class="err" data-err-for="adresse"></small>
+      </div>
+
+      <div class="field">
+        <label for="pays">Pays <span class="req">*</span></label>
+        <input type="text" id="pays" name="pays" list="pays-list" autocomplete="country-name"
+               required value="Suisse">
+        <datalist id="pays-list">
+          <option value="Suisse"></option>
+          <option value="France"></option>
+          <option value="Algérie"></option>
+          <option value="Belgique"></option>
+          <option value="Allemagne"></option>
+          <option value="Italie"></option>
+          <option value="Espagne"></option>
+          <option value="Portugal"></option>
+          <option value="Luxembourg"></option>
+        </datalist>
+        <small class="err" data-err-for="pays"></small>
+      </div>
+
+      <div class="grid-npa">
+        <div class="field">
+          <label for="npa">NPA / Code postal <span class="req">*</span></label>
+          <input type="text" id="npa" name="npa" inputmode="numeric" maxlength="6"
+                 autocomplete="postal-code" required placeholder="1000">
+          <small class="err" data-err-for="npa"></small>
+        </div>
+        <div class="field">
+          <label for="localite">Localité <span class="req">*</span></label>
+          <input type="text" id="localite" name="localite" autocomplete="address-level2"
+                 required placeholder="Ville">
+          <small class="hint" id="npaHint"></small>
+          <small class="err" data-err-for="localite"></small>
+        </div>
       </div>
 
       <div id="blocPresent">
@@ -273,6 +307,21 @@
       <div class="field">
         <label for="message">Un petit mot pour les mariés</label>
         <textarea id="message" name="message" rows="3" placeholder="Facultatif"></textarea>
+      </div>
+
+      <div class="field field--anim">
+        <label class="check">
+          <input type="checkbox" id="veutAnimer" name="veutAnimer">
+          <span>Je souhaite préparer une animation ou une surprise 🎤</span>
+        </label>
+        <div id="blocAnim" class="collapse">
+          <div class="anim__inner">
+            <textarea id="animation" name="animation" rows="3"
+              placeholder="Décrivez votre idée : discours, chanson, sketch, surprise… Les maîtres de cérémonie vous recontacteront."></textarea>
+            <small class="hint">🤫 Confidentiel : visible uniquement par les maîtres de cérémonie, jamais par les mariés.</small>
+            <small class="err" data-err-for="animation"></small>
+          </div>
+        </div>
       </div>
 
       <button type="submit" class="btn btn--gold btn--full" id="submitBtn">
