@@ -146,19 +146,11 @@
   $$("[data-hotel-texte]").forEach(el => (el.textContent = H.texte || ""));
 
   const qr = $("#qrBlock");
-  if (H.qrImage) {
+  if (H.reservationUrl) {
     qr.innerHTML =
-      `<div class="qr__frame"><img src="${esc(H.qrImage)}" alt="QR code de réservation à tarif réduit"></div>`;
-  } else {
-    qr.innerHTML =
-      '<div class="qr__soon"><svg viewBox="0 0 24 24">' +
-      '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>' +
-      '<rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h6"/></svg>' +
-      "<p>Le QR code de réservation sera ajouté ici très prochainement.</p></div>";
-  }
-  if (H.qrLien) {
-    qr.insertAdjacentHTML("beforeend",
-      `<p class="qr__meta"><a href="${esc(H.qrLien)}" target="_blank" rel="noopener">Ouvrir le lien de réservation</a></p>`);
+      `<a class="btn btn--gold hotel__btn" href="${esc(H.reservationUrl)}" target="_blank" rel="noopener">` +
+      `<svg viewBox="0 0 24 24" class="hotel__btn-ico"><path d="M3 21V10l9-6 9 6v11M9 21v-6h6v6"/></svg>` +
+      `<span>${esc(H.boutonTexte || "Réserver au tarif préférentiel")}</span></a>`;
   }
   if (H.telephone) {
     qr.insertAdjacentHTML("beforeend",

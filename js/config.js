@@ -36,14 +36,12 @@ window.MARIAGE = {
     nom: "Grand Hôtel des Bains de Lavey",
     texte:
       "L'hôtel nous propose un tarif préférentiel pour nos invités. " +
-      "Scannez le QR code ci-dessous pour accéder directement à la page de " +
-      "réservation au prix réduit.",
-    // Mets ton image de QR code dans assets/qr/ et indique le chemin ici.
-    // Laisse "" tant que tu ne l'as pas : un encart « bientôt disponible » s'affiche.
-    qrImage: "",                       // ex. "assets/qr/hotel.png"
-    // Lien cliquable de secours (pour ceux qui sont déjà sur mobile)
-    qrLien: "",                        // ex. "https://reservation.hotel.com/xxx"
-    telephone: ""                      // ex. "05 56 00 00 00"
+      "Le bouton ci-dessous ouvre la réservation avec les dates et le tarif réduit déjà pré-remplis.",
+    // Lien de réservation au tarif préférentiel (bouton cliquable).
+    // Laisse "" pour masquer le bouton.
+    reservationUrl: "https://hotel.bains-lavey.ch/?checkin=2027-10-02&nights=1&rooms=1&adults=2&bkcode=MAR22",
+    boutonTexte: "Réserver au tarif préférentiel",
+    telephone: ""                      // ex. "021 000 00 00" (facultatif)
   },
 
   /* ---------- Galerie photos ---------- */

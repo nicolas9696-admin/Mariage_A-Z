@@ -427,6 +427,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-l
 
 /* ================================================================ QR */
 .qr{margin-top:46px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.hotel__btn{padding:18px 40px;font-size:14px}
+.hotel__btn-ico{width:20px;height:20px;stroke:var(--vert-profond);flex:none}
 .qr__frame{
   background:#fff;padding:22px;border-radius:4px;
   box-shadow:0 22px 50px -26px rgba(0,0,0,.7);
