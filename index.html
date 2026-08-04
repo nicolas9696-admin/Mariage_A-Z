@@ -309,21 +309,6 @@
         <textarea id="message" name="message" rows="3" placeholder="Facultatif"></textarea>
       </div>
 
-      <div class="field field--anim">
-        <label class="check">
-          <input type="checkbox" id="veutAnimer" name="veutAnimer">
-          <span>Je souhaite préparer une animation ou une surprise 🎤</span>
-        </label>
-        <div id="blocAnim" class="collapse">
-          <div class="anim__inner">
-            <textarea id="animation" name="animation" rows="3"
-              placeholder="Décrivez votre idée : discours, chanson, sketch, surprise… Les maîtres de cérémonie vous recontacteront."></textarea>
-            <small class="hint">🤫 Confidentiel : visible uniquement par les maîtres de cérémonie, jamais par les mariés.</small>
-            <small class="err" data-err-for="animation"></small>
-          </div>
-        </div>
-      </div>
-
       <button type="submit" class="btn btn--gold btn--full" id="submitBtn">
         <span class="btn__label">Envoyer ma réponse</span>
         <span class="btn__spinner" aria-hidden="true"></span>
@@ -338,6 +323,64 @@
       <h3>Merci !</h3>
       <p id="thanksMsg"></p>
       <button type="button" class="btn btn--ghost" id="againBtn">Envoyer une autre réponse</button>
+    </div>
+
+    <!-- ====== Formulaire animation / surprise (séparé) ====== -->
+    <div class="anim-block" id="animBlock">
+      <div class="center">
+        <p class="eyebrow">🎤 Facultatif</p>
+        <h3 class="anim-title">Proposer une animation ou une surprise</h3>
+        <p class="lead">Un discours, une chanson, un sketch… Vos coordonnées sont
+          reprises automatiquement de votre présence ci-dessus.</p>
+        <p class="anim-secret">🤫 Confidentiel : visible uniquement par les maîtres de cérémonie, jamais par les mariés.</p>
+      </div>
+
+      <form class="form" id="animForm" novalidate>
+        <div class="grid-2">
+          <div class="field">
+            <label for="a_prenom">Prénom <span class="req">*</span></label>
+            <input type="text" id="a_prenom" name="prenom" autocomplete="off">
+            <small class="err" data-err-for="a_prenom"></small>
+          </div>
+          <div class="field">
+            <label for="a_nom">Nom <span class="req">*</span></label>
+            <input type="text" id="a_nom" name="nom" autocomplete="off">
+            <small class="err" data-err-for="a_nom"></small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="a_email">Email <span class="req">*</span></label>
+          <input type="email" id="a_email" name="email" autocomplete="off">
+          <small class="err" data-err-for="a_email"></small>
+        </div>
+
+        <div class="field">
+          <label for="a_tel">Téléphone <span class="req">*</span></label>
+          <input type="tel" id="a_tel" name="telephone" autocomplete="off">
+          <small class="err" data-err-for="a_tel"></small>
+        </div>
+
+        <div class="field">
+          <label for="a_idee">Votre idée <span class="req">*</span></label>
+          <textarea id="a_idee" name="animation" rows="4"
+            placeholder="Décrivez ce que vous aimeriez faire… Les maîtres de cérémonie vous recontacteront."></textarea>
+          <small class="err" data-err-for="a_idee"></small>
+        </div>
+
+        <button type="submit" class="btn btn--gold btn--full" id="animSubmit">
+          <span class="btn__label">Envoyer ma demande</span>
+          <span class="btn__spinner" aria-hidden="true"></span>
+        </button>
+        <p class="form__status" id="animStatus" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="thanks" id="animThanks" hidden>
+        <svg class="thanks__check" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-16"/></svg>
+        <h3>Merci !</h3>
+        <p>Votre idée est transmise aux maîtres de cérémonie. Ils vous recontacteront. 🤫</p>
+        <button type="button" class="btn btn--ghost" id="animAgainBtn">Proposer autre chose</button>
+      </div>
     </div>
   </div>
 </section>

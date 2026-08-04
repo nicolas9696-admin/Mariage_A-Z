@@ -44,9 +44,15 @@ function doPost(e) {
     var d = (e && e.postData && e.postData.contents)
       ? JSON.parse(e.postData.contents)
       : {};
-    ecrireLigne_(d);
-    // Demande d'animation -> onglet séparé (invisible pour les mariés)
-    if (d.animation && String(d.animation).trim()) ecrireAnimation_(d);
+
+    if (d.onlyAnimation) {
+      // Demande venant du formulaire d'animation séparé -> onglet Animations seul
+      ecrireAnimation_(d);
+    } else {
+      ecrireLigne_(d);
+      // (sécurité) si une animation arrive avec une présence, on la range aussi à part
+      if (d.animation && String(d.animation).trim()) ecrireAnimation_(d);
+    }
     return json_({ ok: true });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
@@ -120,7 +126,7 @@ function lireReponses_() {
 
   return valeurs.map(function (r) {
     return {
-      date: String(r[0] || ''),
+      date: fmtDate_(r[0]),
       contact: String(r[1] || ''),
       email: String(r[2] || ''),
       telephone: String(r[3] || ''),
@@ -145,7 +151,7 @@ function lireAnimations_() {
   var valeurs = feuille.getRange(2, 1, dernier - 1, ENTETES_ANIM.length).getValues();
   return valeurs.map(function (r) {
     return {
-      date: String(r[0] || ''),
+      date: fmtDate_(r[0]),
       contact: String(r[1] || ''),
       email: String(r[2] || ''),
       telephone: String(r[3] || ''),
@@ -159,9 +165,10 @@ function ecrireAnimation_(d) {
   var feuille = getFeuilleAnim_();
   feuille.appendRow([
     d.date || new Date().toLocaleString('fr-FR'),
-    d.nom || '', d.email || '', d.telephone || '',
+    d.nom || '', d.email || '', '',   // téléphone (col 4) posé juste après
     d.animation || ''
   ]);
+  feuille.getRange(feuille.getLastRow(), 4).setNumberFormat('@').setValue(String(d.telephone || ''));
 }
 
 function ecrireLigne_(d) {
@@ -171,11 +178,13 @@ function ecrireLigne_(d) {
 
   feuille.appendRow([
     d.date || new Date().toLocaleString('fr-FR'),
-    d.nom || '', d.email || '', d.telephone || '', d.adresse || '',
+    d.nom || '', d.email || '', '', d.adresse || '',   // téléphone (col 4) posé juste après
     adultes, enfants, adultes + enfants, d.hotel || '',
     d.listeAdultes || '', d.listeEnfants || '',
     d.allergies || '', d.message || ''
   ]);
+  // téléphone forcé en texte sur la ligne écrite -> préserve le 0 et +33/+213 à coup sûr
+  feuille.getRange(feuille.getLastRow(), 4).setNumberFormat('@').setValue(String(d.telephone || ''));
 }
 
 function getFeuille_() {
@@ -195,9 +204,10 @@ function getFeuille_() {
     feuille.setColumnWidth(5, 260); feuille.setColumnWidth(9, 150);
     feuille.setColumnWidth(10, 240); feuille.setColumnWidth(11, 240);
     feuille.setColumnWidth(12, 280); feuille.setColumnWidth(13, 300);
-    // Téléphone en texte : préserve le 0 initial et les formats +33 / +213
-    feuille.getRange(2, 4, feuille.getMaxRows() - 1, 1).setNumberFormat('@');
   }
+  // Téléphone TOUJOURS en texte (préserve le 0 initial et les formats +33 / +213),
+  // même si l'onglet existait déjà. Posé avant chaque écriture.
+  feuille.getRange(2, 4, feuille.getMaxRows() - 1, 1).setNumberFormat('@');
   return feuille;
 }
 
@@ -222,8 +232,8 @@ function getFeuilleAnim_() {
     feuille.setColumnWidth(1, 160); feuille.setColumnWidth(2, 190);
     feuille.setColumnWidth(3, 220); feuille.setColumnWidth(4, 150);
     feuille.setColumnWidth(5, 420);
-    feuille.getRange(2, 4, feuille.getMaxRows() - 1, 1).setNumberFormat('@'); // téléphone en texte
   }
+  feuille.getRange(2, 4, feuille.getMaxRows() - 1, 1).setNumberFormat('@'); // téléphone toujours en texte
   return feuille;
 }
 
@@ -257,6 +267,15 @@ function sortie_(obj, callback) {
   return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
 }
 function json_(obj) { return sortie_(obj, null); }
+
+/* Affiche une date proprement (jj/mm/aaaa hh:mm), qu'elle soit stockée
+   en objet Date ou déjà en texte. */
+function fmtDate_(v) {
+  if (v instanceof Date) {
+    return Utilities.formatDate(v, Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm');
+  }
+  return String(v || '');
+}
 
 /* =====================================================================
    À LANCER UNE SEULE FOIS depuis l'éditeur (fonction « installer »).

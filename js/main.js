@@ -322,13 +322,6 @@
       .catch(function () { npaHint.textContent = ""; }); // silencieux : saisie manuelle possible
   }
 
-  /* --- Case « je souhaite préparer une animation » --- */
-  var blocAnim = $("#blocAnim");
-  form.veutAnimer.addEventListener("change", function () {
-    blocAnim.classList.toggle("is-open", form.veutAnimer.checked);
-    if (!form.veutAnimer.checked) erreur("animation", "");
-  });
-
   // Boutons + / −
   $$(".stepper__btn").forEach(b =>
     b.addEventListener("click", () => {
@@ -361,10 +354,6 @@
     if (!form.pays.value.trim()) { erreur("pays", "Merci d'indiquer le pays."); ok = false; }
     if (form.npa.value.trim().length < 4) { erreur("npa", "Code postal invalide."); ok = false; }
     if (!form.localite.value.trim()) { erreur("localite", "Merci d'indiquer la localité."); ok = false; }
-
-    if (form.veutAnimer.checked && !form.animation.value.trim()) {
-      erreur("animation", "Décrivez votre idée, ou décochez la case."); ok = false;
-    }
 
     if (!form.querySelector('input[name="hotel"]:checked')) {
       erreur("hotel", "Indiquez si vous réservez une chambre à l'hôtel."); ok = false;
@@ -426,8 +415,7 @@
       listeAdultes: nomsAdultes.join(", "),
       listeEnfants: nomsEnfants.join(", "),
       allergies: form.allergies.value.trim(),
-      message: form.message.value.trim(),
-      animation: form.veutAnimer.checked ? form.animation.value.trim() : ""
+      message: form.message.value.trim()
     };
 
     btn.disabled = true;
@@ -468,11 +456,109 @@
   $("#againBtn").addEventListener("click", () => {
     form.reset();
     majInvites();
-    blocAnim.classList.remove("is-open");
     ["email", "telephone", "adresse", "pays", "npa", "localite", "hotel", "invites"].forEach(c => erreur(c, ""));
     merci.hidden = true;
     form.hidden = false;
     form.scrollIntoView({ block: "center", behavior: "smooth" });
+  });
+
+  /* ================================================================
+     FORMULAIRE ANIMATION / SURPRISE (séparé)
+     - coordonnées reprises automatiquement de la présence
+     - envoi vers l'onglet Animations uniquement
+     ================================================================ */
+  const animForm = $("#animForm"),
+        animStatut = $("#animStatus"),
+        animBtn = $("#animSubmit"),
+        animMerci = $("#animThanks"),
+        aPrenom = $("#a_prenom"), aNom = $("#a_nom"),
+        aEmail = $("#a_email"), aTel = $("#a_tel"), aIdee = $("#a_idee");
+
+  // --- Auto-remplissage depuis la présence (tant que l'invité n'a pas édité) ---
+  function miroir() {
+    const p1 = $('#listeAdultes .invite [data-field="prenom"]');
+    const n1 = $('#listeAdultes .invite [data-field="nom"]');
+    if (!aPrenom.dataset.touched && p1) aPrenom.value = p1.value;
+    if (!aNom.dataset.touched && n1) aNom.value = n1.value;
+    if (!aEmail.dataset.touched) aEmail.value = form.email.value;
+    if (!aTel.dataset.touched) aTel.value = form.telephone.value;
+  }
+  [form.email, form.telephone].forEach(el => el.addEventListener("input", miroir));
+  listeAdultes.addEventListener("input", miroir);
+  [aPrenom, aNom, aEmail, aTel].forEach(el =>
+    el.addEventListener("input", () => { el.dataset.touched = "1"; }));
+
+  function animErreur(champ, msg) {
+    const el = $(`[data-err-for="${champ}"]`);
+    if (el) el.textContent = msg || "";
+    const input = animForm.querySelector("#" + champ);
+    if (input) input.classList.toggle("is-error", Boolean(msg));
+  }
+
+  function validerAnim() {
+    let ok = true;
+    ["a_prenom", "a_nom", "a_email", "a_tel", "a_idee"].forEach(c => animErreur(c, ""));
+    if (!aPrenom.value.trim()) { animErreur("a_prenom", "Prénom requis."); ok = false; }
+    if (!aNom.value.trim()) { animErreur("a_nom", "Nom requis."); ok = false; }
+    const mail = aEmail.value.trim();
+    if (!mail || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { animErreur("a_email", "Email invalide."); ok = false; }
+    if (!aTel.value.trim()) { animErreur("a_tel", "Téléphone requis."); ok = false; }
+    if (!aIdee.value.trim()) { animErreur("a_idee", "Décrivez votre idée."); ok = false; }
+    return ok;
+  }
+
+  animForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    animStatut.textContent = ""; animStatut.className = "form__status";
+    if (!validerAnim()) {
+      animForm.querySelector(".is-error")?.scrollIntoView({ block: "center", behavior: "smooth" });
+      return;
+    }
+
+    const donnees = {
+      onlyAnimation: true,
+      date: new Date().toLocaleString("fr-FR"),
+      nom: (aPrenom.value.trim() + " " + aNom.value.trim()).trim(),
+      email: aEmail.value.trim(),
+      telephone: aTel.value.trim(),
+      animation: aIdee.value.trim()
+    };
+
+    animBtn.disabled = true;
+    animBtn.classList.add("is-loading");
+    $(".btn__label", animBtn).textContent = "Envoi en cours…";
+
+    try {
+      if (!C.rsvpEndpoint) {
+        await new Promise(r => setTimeout(r, 600));
+        console.warn("[Animation] Mode démo — rsvpEndpoint non configuré", donnees);
+      } else {
+        await fetch(C.rsvpEndpoint, {
+          method: "POST", mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(donnees)
+        });
+      }
+      animForm.hidden = true;
+      animMerci.hidden = false;
+      animMerci.scrollIntoView({ block: "center", behavior: "smooth" });
+    } catch (err) {
+      console.error(err);
+      animStatut.textContent = "L'envoi a échoué. Vérifiez votre connexion et réessayez.";
+      animStatut.className = "form__status is-error";
+    } finally {
+      animBtn.disabled = false;
+      animBtn.classList.remove("is-loading");
+      $(".btn__label", animBtn).textContent = "Envoyer ma demande";
+    }
+  });
+
+  $("#animAgainBtn").addEventListener("click", () => {
+    aIdee.value = "";
+    ["a_prenom", "a_nom", "a_email", "a_tel", "a_idee"].forEach(c => animErreur(c, ""));
+    animMerci.hidden = true;
+    animForm.hidden = false;
+    animForm.scrollIntoView({ block: "center", behavior: "smooth" });
   });
 
   /* ------------------------------------------------------- Utilitaire */
