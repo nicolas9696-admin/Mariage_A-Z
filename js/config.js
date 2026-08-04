@@ -48,8 +48,17 @@ window.MARIAGE = {
   // Ajoute tes photos dans assets/photos/ puis liste-les ici.
   // Tant que la liste est vide, des cadres décoratifs s'affichent à la place.
   photos: [
-    // { src: "assets/photos/01.jpg", alt: "Nos fiançailles" },
-    // { src: "assets/photos/02.jpg", alt: "Week-end en Provence" },
+    { src: "assets/photos/01.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/02.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/03.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/04.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/05.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/06.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/07.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/08.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/09.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/10.jpg", alt: "Anaé & Zachary" },
+    { src: "assets/photos/11.jpg", alt: "Anaé & Zachary" },
   ],
 
   /* ---------- Formulaire RSVP ---------- */
