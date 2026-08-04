@@ -9,7 +9,7 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
 
   var gate = $("#gate"), gateForm = $("#gateForm"), passInput = $("#pass"),
-      gateErr = $("#gateErr"), gateBtn = $("#gateForm button"),
+      gateErr = $("#gateErr"), gateBtn = $('#gateForm button[type="submit"]'),
       dash = $("#dash"), content = $("#content");
 
   var cle = "";  // mot de passe en mémoire (jamais stocké en clair sur le disque)
