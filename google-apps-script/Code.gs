@@ -8,6 +8,15 @@
    ===================================================================== */
 
 var ONGLET = 'Réponses';
+var ONGLET_ANIM = 'Animations';   // demandes des invités, réservées aux maîtres de cérémonie
+
+var ENTETES_ANIM = [
+  'Date',
+  'Invité',
+  'Email',
+  'Téléphone',
+  "Idée d'animation / surprise"
+];
 
 var ENTETES = [
   'Date de réponse',
@@ -36,6 +45,8 @@ function doPost(e) {
       ? JSON.parse(e.postData.contents)
       : {};
     ecrireLigne_(d);
+    // Demande d'animation -> onglet séparé (invisible pour les mariés)
+    if (d.animation && String(d.animation).trim()) ecrireAnimation_(d);
     return json_({ ok: true });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
@@ -53,9 +64,9 @@ function doPost(e) {
 function doGet(e) {
   var p = (e && e.parameter) ? e.parameter : {};
 
-  // --- Données pour le tableau de bord privé ---
+  // --- Données pour le tableau de bord des mariés ---
   if (p.action === 'list') {
-    if (p.key !== getCle_()) {
+    if (p.key !== getCle_('ADMIN_KEY')) {
       return sortie_({ ok: false, error: 'Mot de passe incorrect.' }, p.callback);
     }
     try {
@@ -65,18 +76,33 @@ function doGet(e) {
     }
   }
 
+  // --- Demandes d'animation pour les maîtres de cérémonie ---
+  if (p.action === 'animations') {
+    if (p.key !== getCle_('CEREMONIE_KEY')) {
+      return sortie_({ ok: false, error: 'Mot de passe incorrect.' }, p.callback);
+    }
+    try {
+      return sortie_({ ok: true, animations: lireAnimations_() }, p.callback);
+    } catch (err) {
+      return sortie_({ ok: false, error: String(err) }, p.callback);
+    }
+  }
+
   // --- Test d'écriture ---
   if (p.test === '1') {
     try {
-      ecrireLigne_({
+      var test = {
         date: new Date().toLocaleString('fr-FR'),
         nom: 'TEST (ligne à supprimer)', email: 'test@exemple.com',
-        telephone: '079 000 00 00', adresse: 'Rue de Test 1, 1000 Lausanne',
+        telephone: '079 000 00 00', adresse: 'Rue de Test 1, 1000 Lausanne, Suisse',
         adultes: 2, enfants: 1, hotel: 'Oui, va réserver',
         listeAdultes: 'Adulte Un, Adulte Deux', listeEnfants: 'Enfant Un (5 ans)',
-        allergies: 'aucune', message: 'Écriture de test réussie ✔'
-      });
-      return sortie_({ ok: true, message: "Ligne de test écrite. Regarde l'onglet Réponses." }, p.callback);
+        allergies: 'aucune', message: 'Écriture de test réussie ✔',
+        animation: 'TEST — discours surprise (à supprimer)'
+      };
+      ecrireLigne_(test);
+      ecrireAnimation_(test);
+      return sortie_({ ok: true, message: "Lignes de test écrites (Réponses + Animations)." }, p.callback);
     } catch (err) {
       return sortie_({ ok: false, error: String(err) }, p.callback);
     }
@@ -111,7 +137,33 @@ function lireReponses_() {
   });
 }
 
+/* ------------------------------------------- Lecture des animations */
+function lireAnimations_() {
+  var feuille = getFeuilleAnim_();
+  var dernier = feuille.getLastRow();
+  if (dernier < 2) return [];
+  var valeurs = feuille.getRange(2, 1, dernier - 1, ENTETES_ANIM.length).getValues();
+  return valeurs.map(function (r) {
+    return {
+      date: String(r[0] || ''),
+      contact: String(r[1] || ''),
+      email: String(r[2] || ''),
+      telephone: String(r[3] || ''),
+      animation: String(r[4] || '')
+    };
+  });
+}
+
 /* --------------------------------------------------- Écriture commune */
+function ecrireAnimation_(d) {
+  var feuille = getFeuilleAnim_();
+  feuille.appendRow([
+    d.date || new Date().toLocaleString('fr-FR'),
+    d.nom || '', d.email || '', d.telephone || '',
+    d.animation || ''
+  ]);
+}
+
 function ecrireLigne_(d) {
   var feuille = getFeuille_();
   var adultes = Number(d.adultes) || 0;
@@ -145,6 +197,23 @@ function getFeuille_() {
   return feuille;
 }
 
+function getFeuilleAnim_() {
+  var classeur = ouvrirClasseur_();
+  var feuille = classeur.getSheetByName(ONGLET_ANIM);
+  if (!feuille) feuille = classeur.insertSheet(ONGLET_ANIM);
+
+  if (feuille.getLastRow() === 0) {
+    feuille.appendRow(ENTETES_ANIM);
+    feuille.getRange(1, 1, 1, ENTETES_ANIM.length)
+      .setFontWeight('bold').setBackground('#8a6a11').setFontColor('#f7edcb');
+    feuille.setFrozenRows(1);
+    feuille.setColumnWidth(1, 160); feuille.setColumnWidth(2, 190);
+    feuille.setColumnWidth(3, 220); feuille.setColumnWidth(4, 150);
+    feuille.setColumnWidth(5, 420);
+  }
+  return feuille;
+}
+
 function ouvrirClasseur_() {
   var id = PropertiesService.getScriptProperties().getProperty('SHEET_ID');
   if (id) return SpreadsheetApp.openById(id);
@@ -156,10 +225,12 @@ function ouvrirClasseur_() {
   throw new Error("Aucun classeur trouvé : lance une fois « installer » depuis l'éditeur.");
 }
 
-/* Mot de passe du tableau de bord (stocké dans les propriétés du script,
-   JAMAIS dans le code public). Défini via « installer » ou Paramètres du projet. */
-function getCle_() {
-  return PropertiesService.getScriptProperties().getProperty('ADMIN_KEY') || '';
+/* Mots de passe (stockés dans les propriétés du script, JAMAIS dans le code public) :
+   - ADMIN_KEY      : tableau de bord des mariés
+   - CEREMONIE_KEY  : page des maîtres de cérémonie (animations)
+   Définis dans Paramètres du projet -> Propriétés du script (voir README). */
+function getCle_(nom) {
+  return PropertiesService.getScriptProperties().getProperty(nom) || '';
 }
 
 /* Sortie JSON, ou JSONP si un callback est fourni. */

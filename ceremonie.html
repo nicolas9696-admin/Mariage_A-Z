@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Maîtres de cérémonie — A &amp; Z</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&family=Allura&display=swap" rel="stylesheet">
+<script>document.write('<link rel="stylesheet" href="css/style.css?v=' + Date.now() + '">');</script>
+
+<style>
+  body{background:var(--creme);min-height:100vh}
+  .admin{max-width:920px;margin:0 auto;padding:40px 22px 80px}
+  [hidden]{display:none!important}
+
+  .gate{min-height:100vh;display:grid;place-items:center;padding:24px}
+  .gate__card{
+    background:var(--papier);border:1px solid rgba(61,87,56,.14);
+    border-radius:4px;padding:clamp(30px,5vw,52px);max-width:420px;width:100%;
+    text-align:center;box-shadow:0 24px 60px -40px rgba(19,42,29,.55);
+  }
+  .gate__mono{font-family:var(--script);font-size:56px;color:var(--or-fonce);line-height:1;margin-bottom:8px}
+  .gate__title{font-family:var(--serif);font-size:26px;color:var(--vert-profond);margin:0 0 6px}
+  .gate__sub{color:var(--gris);font-size:15px;margin:0 0 26px}
+  .gate__field{position:relative;margin-bottom:14px}
+  .gate input{
+    width:100%;padding:14px 46px 14px 15px;border:1px solid rgba(61,87,56,.22);border-radius:2px;
+    background:var(--creme-2);font-family:var(--sans);font-size:16px;text-align:center;
+    letter-spacing:.05em;color:var(--encre);
+  }
+  .gate input:focus{outline:0;border-color:var(--or);box-shadow:0 0 0 3px rgba(184,144,31,.18)}
+  .gate__eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;color:var(--gris);padding:6px;line-height:0}
+  .gate__eye svg{width:20px;height:20px}
+  .gate__eye.is-on{color:var(--or-fonce)}
+  .gate__err{color:#b4453a;font-size:15px;font-weight:500;min-height:22px;margin:10px 0 0}
+  .gate__err:not(:empty){background:rgba(180,69,58,.08);border:1px solid rgba(180,69,58,.3);border-radius:3px;padding:10px 12px}
+
+  .dash__head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    gap:16px;margin-bottom:20px;padding-bottom:24px;border-bottom:1px solid rgba(61,87,56,.15)}
+  .dash__brand{display:flex;align-items:baseline;gap:14px}
+  .dash__mono{font-family:var(--script);font-size:40px;color:var(--or-fonce);line-height:1}
+  .dash__title{font-family:var(--serif);font-size:24px;color:var(--vert-profond)}
+  .dash__actions{display:flex;gap:10px;flex-wrap:wrap}
+  .abtn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:11px 18px;border-radius:2px;
+    border:1px solid var(--vert-sauge);background:transparent;color:var(--vert);font-family:var(--sans);
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;transition:all .25s}
+  .abtn:hover{background:var(--vert);color:var(--creme);border-color:var(--vert)}
+  .abtn svg{width:16px;height:16px}
+
+  .secret{background:rgba(184,144,31,.1);border:1px solid rgba(184,144,31,.35);border-radius:4px;
+    padding:14px 18px;margin-bottom:26px;font-family:var(--serif);font-style:italic;font-size:17px;color:var(--vert-profond)}
+
+  .compte{font-family:var(--serif);font-size:20px;color:var(--gris);margin:0 0 20px}
+  .compte b{color:var(--or-fonce);font-size:26px}
+
+  .cartes{display:grid;gap:16px}
+  .carte{background:var(--papier);border:1px solid rgba(61,87,56,.12);border-left:3px solid var(--or);
+    border-radius:4px;padding:22px 24px}
+  .carte__haut{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:12px}
+  .carte__nom{font-family:var(--serif);font-size:22px;color:var(--vert-profond)}
+  .carte__date{font-size:13px;color:var(--gris)}
+  .carte__idee{font-size:17px;line-height:1.6;color:var(--encre);white-space:pre-wrap}
+  .carte__coord{margin-top:14px;padding-top:12px;border-top:1px solid rgba(61,87,56,.12);
+    font-size:14px;color:var(--gris);display:flex;flex-wrap:wrap;gap:6px 20px}
+  .carte__coord a{color:var(--or-fonce);text-decoration:none}
+
+  .vide{color:var(--gris);font-style:italic;font-family:var(--serif);font-size:20px;text-align:center;padding:60px 0}
+  .loading{text-align:center;color:var(--gris);font-style:italic;font-family:var(--serif);font-size:20px;padding:60px 0}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <form class="gate__card" id="gateForm">
+    <div class="gate__mono">A &amp; Z</div>
+    <h1 class="gate__title">Maîtres de cérémonie</h1>
+    <p class="gate__sub">Demandes d'animations &amp; surprises</p>
+    <div class="gate__field">
+      <input type="password" id="pass" name="mdp-ceremonie-mariage" placeholder="Mot de passe"
+             autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"
+             data-lpignore="true" data-1p-ignore autofocus>
+      <button type="button" class="gate__eye" id="eye" aria-label="Afficher le mot de passe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <button type="submit" class="btn btn--gold btn--full">
+      <span class="btn__label">Accéder</span>
+      <span class="btn__spinner" aria-hidden="true"></span>
+    </button>
+    <p class="gate__err" id="gateErr"></p>
+  </form>
+</div>
+
+<div class="admin" id="dash" hidden>
+  <header class="dash__head">
+    <div class="dash__brand">
+      <span class="dash__mono">A &amp; Z</span>
+      <span class="dash__title">Animations &amp; surprises</span>
+    </div>
+    <div class="dash__actions">
+      <button class="abtn" id="refresh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></svg>
+        Actualiser
+      </button>
+      <button class="abtn" id="export">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
+        Exporter (CSV)
+      </button>
+    </div>
+  </header>
+
+  <p class="secret">🤫 Ces demandes sont confidentielles — les mariés n'y ont pas accès. Surprises garanties !</p>
+
+  <div id="content"><p class="loading">Chargement des demandes…</p></div>
+</div>
+
+<script>document.write('<script src="js/config.js?v=' + Date.now() + '"><\/script>');</script>
+<script>document.write('<script src="js/ceremonie.js?v=' + Date.now() + '"><\/script>');</script>
+</body>
+</html>

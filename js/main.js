@@ -415,7 +415,8 @@
       listeAdultes: nomsAdultes.join(", "),
       listeEnfants: nomsEnfants.join(", "),
       allergies: form.allergies.value.trim(),
-      message: form.message.value.trim()
+      message: form.message.value.trim(),
+      animation: form.veutAnimer.checked ? form.animation.value.trim() : ""
     };
 
     btn.disabled = true;
@@ -456,6 +457,7 @@
   $("#againBtn").addEventListener("click", () => {
     form.reset();
     majInvites();
+    blocAnim.classList.remove("is-open");
     ["email", "telephone", "adresse", "pays", "npa", "localite", "hotel", "invites"].forEach(c => erreur(c, ""));
     merci.hidden = true;
     form.hidden = false;
