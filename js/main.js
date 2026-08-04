@@ -225,11 +225,16 @@
       const ligne = document.createElement("div");
       ligne.className = "invite" + (type === "enfant" ? " invite--enfant" : "");
 
+      const prenom = document.createElement("input");
+      prenom.type = "text"; prenom.autocomplete = "off";
+      prenom.dataset.role = type; prenom.dataset.field = "prenom";
+      prenom.placeholder = "Prénom";
+      ligne.appendChild(prenom);
+
       const nom = document.createElement("input");
-      nom.type = "text";
-      nom.autocomplete = "off";
-      nom.dataset.role = type;
-      nom.placeholder = `${type === "enfant" ? "Enfant" : "Adulte"} ${i + 1} — nom et prénom`;
+      nom.type = "text"; nom.autocomplete = "off";
+      nom.dataset.role = type; nom.dataset.field = "nom";
+      nom.placeholder = "Nom";
       ligne.appendChild(nom);
 
       if (type === "enfant") {
@@ -237,7 +242,7 @@
         age.type = "number";
         age.min = 2; age.max = 10;
         age.inputMode = "numeric";
-        age.dataset.role = "age";
+        age.dataset.role = "age"; age.dataset.field = "age";
         age.placeholder = "Âge";
         ligne.appendChild(age);
       }
@@ -379,7 +384,7 @@
       .forEach(i => i.classList.remove("is-error"));
 
     if (manquants.length) {
-      erreur("invites", "Merci d'indiquer le nom de chaque personne présente.");
+      erreur("invites", "Merci d'indiquer le prénom et le nom de chaque personne présente.");
       ok = false;
     }
     return ok;
@@ -394,11 +399,17 @@
       return;
     }
 
-    const nomsAdultes = $$('input[data-role="adulte"]').map(i => i.value.trim());
+    const nomComplet = (ligne) => {
+      const p = $('[data-field="prenom"]', ligne).value.trim();
+      const n = $('[data-field="nom"]', ligne).value.trim();
+      return (p + " " + n).trim();
+    };
+
+    const nomsAdultes = $$(".invite", listeAdultes).map(nomComplet);
 
     const nomsEnfants = $$(".invite--enfant", listeEnfants).map(l => {
-      const nom = $('input[data-role="enfant"]', l).value.trim();
-      const age = $('input[data-role="age"]', l).value.trim();
+      const nom = nomComplet(l);
+      const age = $('[data-field="age"]', l).value.trim();
       return age ? `${nom} (${age} ans)` : nom;
     });
 

@@ -183,7 +183,9 @@ function getFeuille_() {
   var feuille = classeur.getSheetByName(ONGLET);
   if (!feuille) feuille = classeur.insertSheet(ONGLET);
 
-  if (feuille.getLastRow() === 0) {
+  // (Re)crée les en-têtes s'ils manquent OU ne correspondent plus (ancienne structure).
+  if (!entetesCorrects_(feuille, ENTETES)) {
+    feuille.clear();
     feuille.appendRow(ENTETES);
     feuille.getRange(1, 1, 1, ENTETES.length)
       .setFontWeight('bold').setBackground('#55764c').setFontColor('#f3e3ae');
@@ -193,8 +195,17 @@ function getFeuille_() {
     feuille.setColumnWidth(5, 260); feuille.setColumnWidth(9, 150);
     feuille.setColumnWidth(10, 240); feuille.setColumnWidth(11, 240);
     feuille.setColumnWidth(12, 280); feuille.setColumnWidth(13, 300);
+    // Téléphone en texte : préserve le 0 initial et les formats +33 / +213
+    feuille.getRange(2, 4, feuille.getMaxRows() - 1, 1).setNumberFormat('@');
   }
   return feuille;
+}
+
+/* Vrai si la 1re ligne correspond exactement aux en-têtes attendus. */
+function entetesCorrects_(feuille, entetes) {
+  if (feuille.getLastRow() === 0) return false;
+  var actuels = feuille.getRange(1, 1, 1, entetes.length).getValues()[0];
+  return actuels.join('|') === entetes.join('|');
 }
 
 function getFeuilleAnim_() {
@@ -202,7 +213,8 @@ function getFeuilleAnim_() {
   var feuille = classeur.getSheetByName(ONGLET_ANIM);
   if (!feuille) feuille = classeur.insertSheet(ONGLET_ANIM);
 
-  if (feuille.getLastRow() === 0) {
+  if (!entetesCorrects_(feuille, ENTETES_ANIM)) {
+    feuille.clear();
     feuille.appendRow(ENTETES_ANIM);
     feuille.getRange(1, 1, 1, ENTETES_ANIM.length)
       .setFontWeight('bold').setBackground('#8a6a11').setFontColor('#f7edcb');
@@ -210,6 +222,7 @@ function getFeuilleAnim_() {
     feuille.setColumnWidth(1, 160); feuille.setColumnWidth(2, 190);
     feuille.setColumnWidth(3, 220); feuille.setColumnWidth(4, 150);
     feuille.setColumnWidth(5, 420);
+    feuille.getRange(2, 4, feuille.getMaxRows() - 1, 1).setNumberFormat('@'); // téléphone en texte
   }
   return feuille;
 }

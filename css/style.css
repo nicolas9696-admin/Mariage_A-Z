@@ -486,10 +486,13 @@ svg{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-l
 
 /* liste des invités générée dynamiquement */
 .invites{display:flex;flex-direction:column;gap:10px}
-.invite{display:grid;grid-template-columns:1fr;gap:10px;animation:fadeUp .4s var(--ease)}
-.invite--enfant{grid-template-columns:1fr 104px}
+.invite{display:grid;grid-template-columns:1fr 1fr;gap:10px;animation:fadeUp .4s var(--ease)}
+.invite--enfant{grid-template-columns:1fr 1fr 80px}
 .invite input{width:100%}
-@media(max-width:420px){.invite--enfant{grid-template-columns:1fr 84px}}
+@media(max-width:420px){
+  .invite{grid-template-columns:1fr 1fr}
+  .invite--enfant{grid-template-columns:1fr 1fr 64px}
+}
 .err{display:block;margin-top:7px;font-size:13px;color:#b4453a;min-height:0}
 
 .choices{display:flex;flex-direction:column;gap:10px}
