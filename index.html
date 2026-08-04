@@ -10,7 +10,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&family=Allura&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<!-- Anti-cache : force le navigateur à charger la dernière version du style
+     (évite qu'une ancienne version reste affichée après une mise à jour). -->
+<script>document.write('<link rel="stylesheet" href="css/style.css?v=' + Date.now() + '">');</script>
+<noscript><link rel="stylesheet" href="css/style.css"></noscript>
 </head>
 <body>
 
@@ -281,7 +284,11 @@
   <button class="lightbox__nav lightbox__nav--next" aria-label="Suivante">&#8250;</button>
 </div>
 
-<script src="js/config.js"></script>
-<script src="js/main.js"></script>
+<!-- Anti-cache : recharge toujours la dernière version des scripts (contenu + logique). -->
+<script>
+  var _v = Date.now();
+  document.write('<scr' + 'ipt src="js/config.js?v=' + _v + '"><\/scr' + 'ipt>');
+  document.write('<scr' + 'ipt src="js/main.js?v=' + _v + '"><\/scr' + 'ipt>');
+</script>
 </body>
 </html>
