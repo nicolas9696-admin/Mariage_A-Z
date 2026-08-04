@@ -14,6 +14,15 @@
 
   var cle = "";  // mot de passe en mémoire (jamais stocké en clair sur le disque)
 
+  /* Afficher / masquer le mot de passe */
+  var eye = $("#eye");
+  if (eye) eye.addEventListener("click", function () {
+    var estCache = passInput.type === "password";
+    passInput.type = estCache ? "text" : "password";
+    eye.classList.toggle("is-on", estCache);
+    passInput.focus();
+  });
+
   /* ------------------------------------------------ Appel JSONP ------ */
   function chargerDonnees(motDePasse) {
     return new Promise(function (resolve, reject) {

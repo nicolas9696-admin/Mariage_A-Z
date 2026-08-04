@@ -25,13 +25,26 @@
   .gate__mono{font-family:var(--script);font-size:56px;color:var(--or-fonce);line-height:1;margin-bottom:8px}
   .gate__title{font-family:var(--serif);font-size:26px;color:var(--vert-profond);margin:0 0 6px}
   .gate__sub{color:var(--gris);font-size:15px;margin:0 0 26px}
+  .gate__field{position:relative;margin-bottom:14px}
   .gate input{
-    width:100%;padding:14px 15px;border:1px solid rgba(61,87,56,.22);border-radius:2px;
+    width:100%;padding:14px 46px 14px 15px;border:1px solid rgba(61,87,56,.22);border-radius:2px;
     background:var(--creme-2);font-family:var(--sans);font-size:16px;text-align:center;
-    letter-spacing:.05em;margin-bottom:14px;color:var(--encre);
+    letter-spacing:.05em;color:var(--encre);
   }
   .gate input:focus{outline:0;border-color:var(--or);box-shadow:0 0 0 3px rgba(184,144,31,.18)}
-  .gate__err{color:#b4453a;font-size:14px;min-height:20px;margin:6px 0 0}
+  .gate__eye{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;color:var(--gris);padding:6px;line-height:0;
+  }
+  .gate__eye svg{width:20px;height:20px}
+  .gate__eye.is-on{color:var(--or-fonce)}
+  .gate__err{
+    color:#b4453a;font-size:15px;font-weight:500;min-height:22px;margin:10px 0 0;
+  }
+  .gate__err:not(:empty){
+    background:rgba(180,69,58,.08);border:1px solid rgba(180,69,58,.3);
+    border-radius:3px;padding:10px 12px;
+  }
 
   /* --- En-tête tableau de bord --- */
   .dash__head{
@@ -109,7 +122,12 @@
     <div class="gate__mono">A &amp; Z</div>
     <h1 class="gate__title">Espace des mariés</h1>
     <p class="gate__sub">Suivi des réponses au mariage</p>
-    <input type="password" id="pass" placeholder="Mot de passe" autocomplete="current-password" autofocus>
+    <div class="gate__field">
+      <input type="password" id="pass" placeholder="Mot de passe" autocomplete="current-password" autofocus>
+      <button type="button" class="gate__eye" id="eye" aria-label="Afficher le mot de passe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
     <button type="submit" class="btn btn--gold btn--full">
       <span class="btn__label">Accéder</span>
       <span class="btn__spinner" aria-hidden="true"></span>
