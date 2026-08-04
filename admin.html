@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tableau de bord — A &amp; Z</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&family=Allura&display=swap" rel="stylesheet">
+<script>document.write('<link rel="stylesheet" href="css/style.css?v=' + Date.now() + '">');</script>
+
+<style>
+  body{background:var(--creme);min-height:100vh}
+  .admin{max-width:1080px;margin:0 auto;padding:40px 22px 80px}
+
+  /* --- Écran mot de passe --- */
+  .gate{min-height:100vh;display:grid;place-items:center;padding:24px}
+  .gate__card{
+    background:var(--papier);border:1px solid rgba(61,87,56,.14);
+    border-radius:4px;padding:clamp(30px,5vw,52px);max-width:420px;width:100%;
+    text-align:center;box-shadow:0 24px 60px -40px rgba(19,42,29,.55);
+  }
+  .gate__mono{font-family:var(--script);font-size:56px;color:var(--or-fonce);line-height:1;margin-bottom:8px}
+  .gate__title{font-family:var(--serif);font-size:26px;color:var(--vert-profond);margin:0 0 6px}
+  .gate__sub{color:var(--gris);font-size:15px;margin:0 0 26px}
+  .gate input{
+    width:100%;padding:14px 15px;border:1px solid rgba(61,87,56,.22);border-radius:2px;
+    background:var(--creme-2);font-family:var(--sans);font-size:16px;text-align:center;
+    letter-spacing:.05em;margin-bottom:14px;color:var(--encre);
+  }
+  .gate input:focus{outline:0;border-color:var(--or);box-shadow:0 0 0 3px rgba(184,144,31,.18)}
+  .gate__err{color:#b4453a;font-size:14px;min-height:20px;margin:6px 0 0}
+
+  /* --- En-tête tableau de bord --- */
+  .dash__head{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    gap:16px;margin-bottom:34px;padding-bottom:24px;border-bottom:1px solid rgba(61,87,56,.15);
+  }
+  .dash__brand{display:flex;align-items:baseline;gap:14px}
+  .dash__mono{font-family:var(--script);font-size:40px;color:var(--or-fonce);line-height:1}
+  .dash__title{font-family:var(--serif);font-size:26px;color:var(--vert-profond)}
+  .dash__actions{display:flex;gap:10px;flex-wrap:wrap}
+  .abtn{
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+    padding:11px 18px;border-radius:2px;border:1px solid var(--vert-sauge);
+    background:transparent;color:var(--vert);font-family:var(--sans);
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;transition:all .25s;
+  }
+  .abtn:hover{background:var(--vert);color:var(--creme);border-color:var(--vert)}
+  .abtn svg{width:16px;height:16px}
+
+  /* --- Tuiles de stats --- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:14px}
+  .stat{
+    background:var(--papier);border:1px solid rgba(61,87,56,.12);border-radius:4px;
+    padding:26px 22px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--or),var(--or-clair),var(--or))}
+  .stat b{display:block;font-family:var(--serif);font-weight:400;font-size:52px;line-height:1;
+    color:var(--vert-profond);font-variant-numeric:tabular-nums}
+  .stat span{display:block;margin-top:10px;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gris)}
+
+  .section-titre{
+    font-family:var(--serif);font-size:24px;color:var(--vert-profond);
+    margin:44px 0 16px;display:flex;align-items:center;gap:12px;
+  }
+  .section-titre .pastille{background:var(--or);color:#fff;font-family:var(--sans);
+    font-size:13px;padding:2px 11px;border-radius:20px;font-weight:500}
+
+  /* --- Allergies --- */
+  .allergies{display:grid;gap:10px}
+  .allergie{
+    background:var(--papier);border:1px solid rgba(184,144,31,.35);border-left:3px solid var(--or);
+    border-radius:3px;padding:14px 18px;
+  }
+  .allergie b{color:var(--vert-profond);font-weight:500}
+  .allergie span{color:var(--encre)}
+  .vide{color:var(--gris);font-style:italic;font-family:var(--serif);font-size:18px}
+
+  /* --- Tableau --- */
+  .tablewrap{overflow-x:auto;border:1px solid rgba(61,87,56,.14);border-radius:4px;background:var(--papier)}
+  table{border-collapse:collapse;width:100%;min-width:760px;font-size:15px}
+  thead th{
+    background:var(--vert);color:var(--or-clair);font-family:var(--sans);font-weight:500;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:left;
+    padding:14px 16px;white-space:nowrap;
+  }
+  tbody td{padding:13px 16px;border-top:1px solid rgba(61,87,56,.1);vertical-align:top;color:var(--encre)}
+  tbody tr:nth-child(even){background:rgba(61,87,56,.035)}
+  td.num{text-align:center;font-variant-numeric:tabular-nums}
+  .nom-fort{font-weight:500;color:var(--vert-profond)}
+  .mini{color:var(--gris);font-size:13px}
+  .badge-al{display:inline-block;background:rgba(184,144,31,.16);color:var(--or-fonce);
+    padding:2px 8px;border-radius:12px;font-size:12px;font-weight:500}
+
+  .loading{text-align:center;color:var(--gris);font-style:italic;font-family:var(--serif);
+    font-size:20px;padding:60px 0}
+</style>
+</head>
+<body>
+
+<!-- ================= ÉCRAN MOT DE PASSE ================= -->
+<div class="gate" id="gate">
+  <form class="gate__card" id="gateForm">
+    <div class="gate__mono">A &amp; Z</div>
+    <h1 class="gate__title">Espace des mariés</h1>
+    <p class="gate__sub">Suivi des réponses au mariage</p>
+    <input type="password" id="pass" placeholder="Mot de passe" autocomplete="current-password" autofocus>
+    <button type="submit" class="btn btn--gold btn--full">
+      <span class="btn__label">Accéder</span>
+      <span class="btn__spinner" aria-hidden="true"></span>
+    </button>
+    <p class="gate__err" id="gateErr"></p>
+  </form>
+</div>
+
+<!-- ================= TABLEAU DE BORD ================= -->
+<div class="admin" id="dash" hidden>
+
+  <header class="dash__head">
+    <div class="dash__brand">
+      <span class="dash__mono">A &amp; Z</span>
+      <span class="dash__title">Réponses au mariage</span>
+    </div>
+    <div class="dash__actions">
+      <button class="abtn" id="refresh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></svg>
+        Actualiser
+      </button>
+      <button class="abtn" id="export">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
+        Exporter (CSV)
+      </button>
+    </div>
+  </header>
+
+  <div id="content"><p class="loading">Chargement des réponses…</p></div>
+</div>
+
+<script>document.write('<script src="js/config.js?v=' + Date.now() + '"><\/script>');</script>
+<script>document.write('<script src="js/admin.js?v=' + Date.now() + '"><\/script>');</script>
+</body>
+</html>
