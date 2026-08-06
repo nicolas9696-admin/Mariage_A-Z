@@ -162,9 +162,9 @@
   const mc = C.maitresCeremonie || [];
   if (mc.length) {
     const gens = mc.map(p =>
-      `<a href="tel:${esc((p.tel || "").replace(/\s/g, ""))}">${esc(p.nom)} — ${esc(p.tel)}</a>`
-    ).join(" &nbsp;·&nbsp; ");
-    fc.innerHTML = (C.contactTexte ? `<span class="footer__contact-intro">${esc(C.contactTexte)}</span><br>` : "") + gens;
+      `<a class="footer__contact-item" href="tel:${esc((p.tel || "").replace(/\s/g, ""))}">${esc(p.nom)} — ${esc(p.tel)}</a>`
+    ).join("");
+    fc.innerHTML = (C.contactTexte ? `<span class="footer__contact-intro">${esc(C.contactTexte)}</span>` : "") + `<span class="footer__contact-list">${gens}</span>`;
   } else {
     const bits = [];
     if (C.contactEmail) bits.push(`<a href="mailto:${esc(C.contactEmail)}">${esc(C.contactEmail)}</a>`);

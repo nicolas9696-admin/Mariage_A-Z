@@ -583,5 +583,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-l
   color:rgba(250,246,238,.6);
 }
 .footer__contact{margin:22px 0 0;font-size:14px;color:rgba(250,246,238,.72);line-height:2}
-.footer__contact-intro{display:inline-block;margin-bottom:6px;font-style:italic;font-family:var(--serif);font-size:16px;color:rgba(250,246,238,.82)}
+.footer__contact-intro{display:block;margin-bottom:12px;font-style:italic;font-family:var(--serif);font-size:16px;color:rgba(250,246,238,.82)}
+.footer__contact-list{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:fit-content;max-width:100%;margin-inline:auto;text-align:left}
+.footer__contact-item{white-space:nowrap}
 .footer__contact a{color:var(--or-clair);text-decoration:none;border-bottom:1px solid rgba(227,199,106,.4)}
