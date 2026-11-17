@@ -53,11 +53,9 @@ window.MARIAGE = {
     { src: "assets/photos/03.jpg", alt: "Anaé & Zachary" },
     { src: "assets/photos/04.jpg", alt: "Anaé & Zachary" },
     { src: "assets/photos/05.jpg", alt: "Anaé & Zachary" },
-    { src: "assets/photos/06.jpg", alt: "Anaé & Zachary" },
     { src: "assets/photos/07.jpg", alt: "Anaé & Zachary" },
     { src: "assets/photos/08.jpg", alt: "Anaé & Zachary" },
     { src: "assets/photos/09.jpg", alt: "Anaé & Zachary" },
-    { src: "assets/photos/10.jpg", alt: "Anaé & Zachary" },
     { src: "assets/photos/11.jpg", alt: "Anaé & Zachary" },
   ],
 
