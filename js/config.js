@@ -25,7 +25,7 @@ window.MARIAGE = {
 
   /* ---------- Programme de la journée ---------- */
   programme: [
-    { heure: "13h30", titre: "Arrivée des invités", texte: "" },
+    { heure: "14h00", titre: "Arrivée des invités", texte: "" },
     { heure: "14h30", titre: "Cérémonie",           texte: "" },
     { heure: "16h30", titre: "Vin d'honneur",       texte: "" },
     { heure: "19h00", titre: "Souper",              texte: "" }
