@@ -587,3 +587,58 @@ svg{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-l
 .footer__contact-list{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:fit-content;max-width:100%;margin-inline:auto;text-align:left}
 .footer__contact-item{white-space:nowrap}
 .footer__contact a{color:var(--or-clair);text-decoration:none;border-bottom:1px solid rgba(227,199,106,.4)}
+
+/* ------------------------------------------------ CADEAU / VOYAGE DE NOCES */
+.section--cadeau{
+  overflow:hidden;
+  background:
+    radial-gradient(90% 55% at 50% 108%,rgba(84,176,178,.30),transparent 70%),
+    linear-gradient(180deg,var(--creme) 0%,#eef1e6 60%,#e3efe8 100%);
+}
+.cadeau{
+  max-width:560px;margin:0 auto;
+  background:rgba(251,247,234,.78);
+  border:1px solid rgba(184,144,31,.28);border-radius:3px;
+  padding:clamp(34px,6vw,56px) clamp(22px,5vw,48px);
+  box-shadow:0 24px 60px -42px rgba(19,42,29,.55);
+}
+.cadeau__texte{
+  font-family:var(--serif);font-size:clamp(19px,2.3vw,22px);
+  color:var(--encre);line-height:1.55;margin:0;
+}
+.cadeau__coeur{width:20px;height:20px;fill:#a8323e;stroke:none;margin:20px auto;display:block}
+.cadeau__script{
+  font-family:var(--script);font-size:clamp(46px,8vw,64px);line-height:1.1;
+  color:var(--or);margin:6px 0 10px;font-weight:400;
+}
+.cadeau__script--dest{color:#a8323e;margin:0}
+.cadeau__direction{
+  font-family:var(--sans);font-size:13px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gris);margin:0 0 4px;
+}
+.cadeau__epi{width:40px;height:16px;fill:none;stroke:var(--or);stroke-width:1.1;flex:none}
+.cadeau__palme{
+  position:absolute;bottom:-10px;width:clamp(90px,16vw,190px);height:auto;
+  fill:none;stroke:var(--or);stroke-width:1.3;stroke-linecap:round;opacity:.35;pointer-events:none;
+}
+.cadeau__palme--g{left:clamp(-30px,1vw,40px)}
+.cadeau__palme--d{right:clamp(-30px,1vw,40px);transform:scaleX(-1)}
+
+.cadeau__banque{margin-top:30px}
+.iban{margin:22px 0 0;text-align:left;border-top:1px solid rgba(184,144,31,.25)}
+.iban[hidden]{display:none}
+.iban__ligne{display:grid;grid-template-columns:120px 1fr;gap:4px 14px;padding:12px 0;
+  border-bottom:1px solid rgba(184,144,31,.18)}
+.iban dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--or-fonce);padding-top:3px}
+.iban dd{margin:0;color:var(--encre);font-size:16px;overflow-wrap:anywhere}
+.iban__val--mono{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.iban__copier{
+  margin-left:6px;font:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:0;border-bottom:1px solid currentColor;color:var(--or-fonce);
+  cursor:pointer;padding:0 0 1px;
+}
+.iban__copier:hover{color:var(--vert)}
+@media (max-width:480px){
+  .iban__ligne{grid-template-columns:1fr}
+  .cadeau__palme{opacity:.22}
+}

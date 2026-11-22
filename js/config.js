@@ -45,6 +45,16 @@ window.MARIAGE = {
     telephone: ""                      // ex. "021 000 00 00" (facultatif)
   },
 
+  /* ---------- Cadeau : participation au voyage de noces ---------- */
+  // Tant que l'IBAN est vide, seul le texte s'affiche (pas de bouton).
+  // Une fois rempli, un bouton « Participer au voyage » dévoile les coordonnées.
+  cadeau: {
+    titulaire: "",                 // ex. "Anaé Chevalier et Zachary Lebsira"
+    iban: "",                      // ex. "CH93 0076 2011 6238 5295 7"
+    banque: "",                    // ex. "UBS Switzerland AG" (facultatif)
+    communication: "Voyage de noces"
+  },
+
   /* ---------- Galerie photos ---------- */
   // Ajoute tes photos dans assets/photos/ puis liste-les ici.
   // Tant que la liste est vide, des cadres décoratifs s'affichent à la place.
