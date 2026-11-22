@@ -117,6 +117,31 @@ de cérémonie.
 
 ---
 
+## Étape 2 quater — Réserver le formulaire aux invités de la liste
+
+Avant d'ouvrir le formulaire, l'invité tape son prénom. S'il n'est pas sur la liste,
+le formulaire reste fermé. À l'envoi, **chaque** personne inscrite (adultes et enfants)
+est revérifiée, et le script refuse aussi tout envoi qui contournerait la page.
+Les majuscules, accents, espaces et tirets sont ignorés (« anne lise » = « Annelise »).
+
+La liste reste **privée** : elle vit dans le Google Sheet, jamais dans le code du site.
+
+1. Dans le Google Sheet : ajoute un onglet nommé exactement **`Invités`**.
+2. Mets-y une colonne avec l'en-tête **`Prénom`** (dans les 10 premières lignes) et un prénom
+   par ligne en dessous. Les autres colonnes (Groupe…) sont ignorées.
+   Le plus simple : **Fichier → Importer → Importer** le fichier Excel des invités,
+   option « Insérer une ou plusieurs feuilles ».
+3. Surnoms : si quelqu'un risque de taper « Fred » au lieu de « Frederic », ajoute une ligne « Fred ».
+4. Recolle `google-apps-script/Code.gs` dans Apps Script, puis
+   **Déployer → Gérer les déploiements → ✏️ → Version : Nouvelle version → Déployer**
+   (l'URL `/exec` ne change pas).
+
+Pour ajouter ou retirer un invité plus tard : modifie l'onglet `Invités`, c'est immédiat.
+
+> ⚠️ Sans l'onglet `Invités`, personne ne peut s'inscrire (message « Vérification impossible »).
+
+---
+
 ## Étape 3 — Ajouter les photos
 
 1. Mets tes images dans `assets/photos/` (format `.jpg`, largeur ~1600 px, compressées).

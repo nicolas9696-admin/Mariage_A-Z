@@ -334,6 +334,69 @@
   [form.adultes, form.enfants].forEach(i => i.addEventListener("change", majInvites));
   majInvites();
 
+  /* --- Liste des invités : vérification des prénoms auprès du script Google --- */
+  // Renvoie la liste des prénoms qui ne sont PAS sur la liste (vide = tout est bon).
+  function verifierPrenoms(prenoms) {
+    return new Promise((resolve, reject) => {
+      if (!C.rsvpEndpoint) { resolve([]); return; }          // mode démo
+      const cb = "az_verif_" + Date.now() + Math.floor(Math.random() * 1e6);
+      const tag = document.createElement("script");
+      const minuteur = setTimeout(() => { nettoyer(); reject(new Error("délai")); }, 15000);
+      function nettoyer() {
+        clearTimeout(minuteur);
+        delete window[cb];
+        if (tag.parentNode) tag.parentNode.removeChild(tag);
+      }
+      window[cb] = rep => {
+        nettoyer();
+        if (rep && rep.ok && Array.isArray(rep.inconnus)) resolve(rep.inconnus);
+        else reject(new Error((rep && rep.error) || "réponse inattendue"));
+      };
+      tag.onerror = () => { nettoyer(); reject(new Error("script injoignable")); };
+      tag.src = C.rsvpEndpoint + "?action=verifier"
+        + "&prenoms=" + encodeURIComponent(JSON.stringify(prenoms))
+        + "&callback=" + cb + "&_=" + Date.now();
+      document.body.appendChild(tag);
+    });
+  }
+  const MSG_HORS_LISTE = "Nous ne trouvons pas ce prénom dans la liste des invités. " +
+    "Vérifiez l'orthographe, ou contactez Anaé ou Zachary.";
+  const MSG_VERIF_KO = "Vérification impossible pour le moment. Réessayez dans un instant.";
+
+  /* --- Étape 1 : prénom -> ouvre le formulaire --- */
+  const gate = $("#gateInvite"), gatePrenom = $("#gatePrenom"),
+        gateBtn = $("#gateBtn"), gateErr = $("#gateErr");
+
+  async function ouvrirFormulaire() {
+    const prenom = gatePrenom.value.trim();
+    gateErr.textContent = "";
+    gatePrenom.classList.remove("is-error");
+    if (!prenom) { gateErr.textContent = "Indiquez votre prénom."; gatePrenom.classList.add("is-error"); return; }
+
+    gateBtn.disabled = true; gateBtn.classList.add("is-loading");
+    $(".btn__label", gateBtn).textContent = "Vérification…";
+    try {
+      const inconnus = await verifierPrenoms([prenom]);
+      if (inconnus.length) {
+        gateErr.textContent = MSG_HORS_LISTE; gatePrenom.classList.add("is-error");
+        return;
+      }
+      gate.hidden = true;
+      form.hidden = false;
+      const p1 = $('#listeAdultes [data-field="prenom"]');
+      if (p1 && !p1.value) { p1.value = prenom.charAt(0).toUpperCase() + prenom.slice(1);p1.dispatchEvent(new Event("input", { bubbles: true })); }
+      form.scrollIntoView({ block: "start", behavior: "smooth" });
+    } catch (err) {
+      console.error(err);
+      gateErr.textContent = MSG_VERIF_KO;
+    } finally {
+      gateBtn.disabled = false; gateBtn.classList.remove("is-loading");
+      $(".btn__label", gateBtn).textContent = "Continuer";
+    }
+  }
+  gateBtn.addEventListener("click", ouvrirFormulaire);
+  gatePrenom.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); ouvrirFormulaire(); } });
+
   function erreur(champ, msg) {
     const el = $(`[data-err-for="${champ}"]`);
     if (el) el.textContent = msg || "";
@@ -423,6 +486,27 @@
     $(".btn__label", btn).textContent = "Envoi en cours…";
 
     try {
+      // Chaque personne inscrite doit figurer sur la liste des invités
+      const champsPrenoms = $$('#listeAdultes [data-field="prenom"], #listeEnfants [data-field="prenom"]');
+      let inconnus;
+      try {
+        inconnus = await verifierPrenoms(champsPrenoms.map(i => i.value.trim()));
+      } catch (err) {
+        console.error(err);
+        statut.textContent = MSG_VERIF_KO;
+        statut.className = "form__status is-error";
+        return;
+      }
+      if (inconnus.length) {
+        champsPrenoms.filter(i => inconnus.includes(i.value.trim()))
+          .forEach(i => i.classList.add("is-error"));
+        erreur("invites", (inconnus.length > 1 ? "Ces prénoms ne sont" : "Ce prénom n'est") +
+          " pas sur la liste des invités : " + inconnus.join(", ") +
+          ". Vérifiez l'orthographe, ou contactez Anaé ou Zachary.");
+        $("#champAdultes").scrollIntoView({ block: "center", behavior: "smooth" });
+        return;
+      }
+
       if (!C.rsvpEndpoint) {
         // Mode démo : aucune URL Google Sheets configurée
         await new Promise(r => setTimeout(r, 700));

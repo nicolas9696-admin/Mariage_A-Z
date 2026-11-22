@@ -186,7 +186,22 @@
       <p class="lead reveal">Seules les personnes présentes sont à inscrire.</p>
     </div>
 
-    <form class="form reveal" id="rsvpForm" novalidate>
+    <!-- Étape 1 : vérification du prénom (liste des invités) -->
+    <div class="form reveal" id="gateInvite">
+      <div class="field">
+        <label for="gatePrenom">Votre prénom <span class="req">*</span></label>
+        <input type="text" id="gatePrenom" autocomplete="given-name" placeholder="Votre prénom"
+               autocapitalize="words" spellcheck="false">
+        <small class="hint">Le formulaire est réservé aux invités du mariage.</small>
+        <small class="err" id="gateErr"></small>
+      </div>
+      <button type="button" class="btn btn--gold btn--full" id="gateBtn">
+        <span class="btn__label">Continuer</span>
+        <span class="btn__spinner" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <form class="form" id="rsvpForm" novalidate hidden>
 
       <div class="field">
         <label for="email">Email <span class="req">*</span></label>
