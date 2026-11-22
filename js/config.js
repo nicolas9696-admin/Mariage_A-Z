@@ -50,6 +50,7 @@ window.MARIAGE = {
   // Une fois rempli, un bouton « Participer au voyage » dévoile les coordonnées.
   cadeau: {
     titulaire: "Anaé Chevalier-Walther",
+    rue: "Avenue Echallens 48",       // rue et n° du titulaire
     localite: "1004 Lausanne",         // NPA + localité du titulaire (demandés par l'e-banking)
     iban: "CH05 8080 8005 3135 8289 9",
     banque: "Banque Raiffeisen Lausanne-Haute-Broye-Jorat",

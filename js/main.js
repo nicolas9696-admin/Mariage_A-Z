@@ -212,6 +212,7 @@
     const dl = $("#cadeauIban"), bouton = $("#cadeauBtn");
     const lignes = [
       ["Titulaire", K.titulaire],
+      ["Rue et n°", K.rue],
       ["NPA / Localité", K.localite],
       ["IBAN", K.iban, true],
       ["Banque", K.banque],
