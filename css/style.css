@@ -624,7 +624,11 @@ svg{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-l
 .cadeau__palme--g{left:clamp(-30px,1vw,40px)}
 .cadeau__palme--d{right:clamp(-30px,1vw,40px);transform:scaleX(-1)}
 
-.cadeau__banque{margin-top:30px}
+.cadeau__urne{
+  font-family:var(--serif);font-style:italic;font-size:clamp(17px,2vw,19px);
+  color:var(--gris);line-height:1.55;margin:24px auto 0;max-width:34ch;
+}
+.cadeau__banque{margin-top:26px}
 .iban{margin:22px 0 0;text-align:left;border-top:1px solid rgba(184,144,31,.25)}
 .iban[hidden]{display:none}
 .iban__ligne{display:grid;grid-template-columns:120px 1fr;gap:4px 14px;padding:12px 0;
