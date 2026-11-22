@@ -30,7 +30,11 @@
   if (cible && !isNaN(cible)) {
     const h = String(cible.getHours()).padStart(2, "0");
     const m = String(cible.getMinutes()).padStart(2, "0");
-    $$("[data-heure]").forEach(el => (el.textContent = `Cérémonie à ${h}h${m}`));
+    // « Dès 14h30 · Cérémonie à 15h00 » (heure de la cérémonie lue dans le programme)
+    const ceremonie = (C.programme || []).filter(e => /c[ée]r[ée]monie/i.test(e.titre || ""))[0];
+    const texteHeure = `Dès ${h}h${m}` +
+      (ceremonie && ceremonie.heure !== `${h}h${m}` ? ` · Cérémonie à ${ceremonie.heure}` : "");
+    $$("[data-heure]").forEach(el => (el.textContent = texteHeure));
   }
 
   $$("[data-maps]").forEach(el => {
