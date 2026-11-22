@@ -214,6 +214,7 @@
       ["Titulaire", K.titulaire],
       ["IBAN", K.iban, true],
       ["Banque", K.banque],
+      ["BIC / SWIFT", K.bic, true],
       ["Communication", K.communication]
     ].filter(l => l[1]);
     dl.innerHTML = lignes.map(([t, v, copie]) =>
