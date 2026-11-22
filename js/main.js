@@ -204,6 +204,38 @@
     io.observe(el);
   });
 
+  /* --------------------------------------- CADEAU : coordonnées bancaires */
+  (function () {
+    const K = C.cadeau || {};
+    const bloc = $("#cadeauBanque");
+    if (!bloc || !K.iban) return;                 // rien tant que l'IBAN n'est pas rempli
+    const dl = $("#cadeauIban"), bouton = $("#cadeauBtn");
+    const lignes = [
+      ["Titulaire", K.titulaire],
+      ["IBAN", K.iban, true],
+      ["Banque", K.banque],
+      ["Communication", K.communication]
+    ].filter(l => l[1]);
+    dl.innerHTML = lignes.map(([t, v, copie]) =>
+      `<div class="iban__ligne"><dt>${esc(t)}</dt><dd>` +
+      `<span class="iban__val${copie ? " iban__val--mono" : ""}">${esc(v)}</span>` +
+      (copie ? ` <button type="button" class="iban__copier" data-copier="${esc(v.replace(/\s+/g, ""))}">Copier</button>` : "") +
+      `</dd></div>`).join("");
+    bloc.hidden = false;
+    bouton.addEventListener("click", () => {
+      dl.hidden = !dl.hidden;
+      bouton.setAttribute("aria-expanded", String(!dl.hidden));
+      bouton.textContent = dl.hidden ? "Participer au voyage" : "Masquer les coordonnées";
+    });
+    dl.addEventListener("click", e => {
+      const b = e.target.closest("[data-copier]");
+      if (!b) return;
+      (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copier) : Promise.reject())
+        .then(() => { b.textContent = "Copié ✓"; setTimeout(() => (b.textContent = "Copier"), 1800); })
+        .catch(() => { b.textContent = "Sélectionnez le texte"; });
+    });
+  })();
+
   /* ----------------------------------------------------- 11. RSVP */
   const form = $("#rsvpForm"),
         statut = $("#formStatus"),
