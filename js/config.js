@@ -11,8 +11,9 @@ window.MARIAGE = {
   initiales: "A & Z",
 
   /* ---------- Date & lieu ---------- */
-  // Format ISO : AAAA-MM-JJTHH:MM  (heure de début de la cérémonie)
-  dateISO: "2027-10-02T15:00",
+  // Format ISO : AAAA-MM-JJTHH:MM  (début de la journée : verre de bienvenue)
+  // Le compte à rebours vise cette heure.
+  dateISO: "2027-10-02T14:30",
   dateTexte: "Samedi 2 octobre 2027",
   lieuNom: "Grand Hôtel des Bains de Lavey",
   lieuAdresse: "Route des Bains 48, 1892 Lavey-Morcles, Suisse",
@@ -25,7 +26,7 @@ window.MARIAGE = {
 
   /* ---------- Programme de la journée ---------- */
   programme: [
-    { heure: "14h30", titre: "Arrivée des invités", texte: "" },
+    { heure: "14h30", titre: "Verre de bienvenue",  texte: "" },
     { heure: "15h00", titre: "Cérémonie",           texte: "" },
     { heure: "16h30", titre: "Vin d'honneur",       texte: "" },
     { heure: "19h00", titre: "Souper",              texte: "" },
