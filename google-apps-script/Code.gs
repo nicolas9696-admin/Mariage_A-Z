@@ -8,7 +8,8 @@
    ===================================================================== */
 
 var ONGLET = 'Réponses';
-var ONGLET_ANIM = 'Animations';   // demandes des invités, réservées aux maîtres de cérémonie
+var ONGLET_ANIM = 'Animations';
+var ONGLET_LISTE = 'Invités';     // liste des prénoms autorisés à s'inscrire (privée)   // demandes des invités, réservées aux maîtres de cérémonie
 
 var ENTETES_ANIM = [
   'Date',
@@ -49,6 +50,11 @@ function doPost(e) {
       // Demande venant du formulaire d'animation séparé -> onglet Animations seul
       ecrireAnimation_(d);
     } else {
+      // Seules les personnes de la liste « Invités » peuvent s'inscrire
+      var refuses = personnesHorsListe_(d);
+      if (refuses.length) {
+        return json_({ ok: false, error: 'Hors liste : ' + refuses.join(', ') });
+      }
       ecrireLigne_(d);
       // (sécurité) si une animation arrive avec une présence, on la range aussi à part
       if (d.animation && String(d.animation).trim()) ecrireAnimation_(d);
@@ -62,8 +68,9 @@ function doPost(e) {
 }
 
 /* ---------------------------------------------------------------- GET */
-/* Trois usages :
+/* Usages :
    - ?action=list&key=MOT_DE_PASSE   -> renvoie les réponses (pour le tableau de bord)
+   - ?action=verifier&prenoms=[...]  -> prénoms absents de la liste « Invités »
    - ?test=1                         -> écrit une ligne de test
    - (rien)                          -> message de bon fonctionnement
    Le paramètre &callback=xxx active le JSONP (évite les blocages CORS). */
@@ -77,6 +84,21 @@ function doGet(e) {
     }
     try {
       return sortie_({ ok: true, invites: lireReponses_() }, p.callback);
+    } catch (err) {
+      return sortie_({ ok: false, error: String(err) }, p.callback);
+    }
+  }
+
+  // --- Vérifie que des prénoms sont sur la liste des invités ---
+  //     ?action=verifier&prenoms=["Anaé","Zachary"]  -> { ok, inconnus: [...] }
+  if (p.action === 'verifier') {
+    try {
+      var autorises = prenomsAutorises_();
+      var demandes = JSON.parse(p.prenoms || '[]');
+      var inconnus = demandes.filter(function (x) {
+        return !autorises[normaliser_(x)];
+      });
+      return sortie_({ ok: true, inconnus: inconnus }, p.callback);
     } catch (err) {
       return sortie_({ ok: false, error: String(err) }, p.callback);
     }
@@ -115,6 +137,61 @@ function doGet(e) {
   }
 
   return sortie_({ ok: true, message: 'Le script du mariage fonctionne.' }, p.callback);
+}
+
+/* ------------------------------------------- Liste des invités autorisés */
+/* Onglet « Invités » du Google Sheet : une colonne dont l'en-tête est « Prénom »
+   (cherché dans les 10 premières lignes). Chaque prénom en dessous est autorisé.
+   Majuscules, accents, espaces et tirets sont ignorés : « anne lise » = « Anne-Lise ».
+   Pour ajouter un surnom (« Fred » en plus de « Frederic »), ajoute simplement une ligne. */
+function prenomsAutorises_() {
+  var feuille = ouvrirClasseur_().getSheetByName(ONGLET_LISTE);
+  if (!feuille || feuille.getLastRow() === 0) {
+    throw new Error("Onglet « " + ONGLET_LISTE + " » introuvable ou vide dans le Google Sheet.");
+  }
+  var valeurs = feuille.getDataRange().getValues();
+  var ligneEntete = -1, col = -1;
+  for (var r = 0; r < Math.min(10, valeurs.length) && col < 0; r++) {
+    for (var c = 0; c < valeurs[r].length; c++) {
+      if (normaliser_(valeurs[r][c]) === 'prenom') { ligneEntete = r; col = c; break; }
+    }
+  }
+  if (col < 0) throw new Error("Colonne « Prénom » introuvable dans l'onglet « " + ONGLET_LISTE + " ».");
+
+  var autorises = {};
+  for (var i = ligneEntete + 1; i < valeurs.length; i++) {
+    var n = normaliser_(valeurs[i][col]);
+    if (n) autorises[n] = true;
+  }
+  return autorises;
+}
+
+/* « Anaé-Lou » -> « anaelou » */
+function normaliser_(v) {
+  return String(v == null ? '' : v)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z]/g, '');
+}
+
+/* Personnes d'une réponse dont le prénom n'est pas sur la liste.
+   Chaque personne est « Prénom Nom » (enfants : « Prénom Nom (5 ans) ») :
+   on accepte si le 1er mot, ou les 2-3 premiers mots (prénoms composés), sont sur la liste. */
+function personnesHorsListe_(d) {
+  var autorises = prenomsAutorises_();
+  var personnes = [].concat(
+    String(d.listeAdultes || '').split(','),
+    String(d.listeEnfants || '').split(',')
+  ).map(function (x) { return x.trim(); }).filter(String);
+
+  if (!personnes.length) return ['(aucun nom)'];
+
+  return personnes.filter(function (pers) {
+    var mots = pers.replace(/\(.*\)/, '').trim().split(/\s+/);
+    for (var k = 1; k <= Math.min(3, mots.length); k++) {
+      if (autorises[normaliser_(mots.slice(0, k).join(' '))]) return false;
+    }
+    return true;
+  });
 }
 
 /* ------------------------------------------------ Lecture des réponses */
