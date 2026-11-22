@@ -49,9 +49,10 @@ window.MARIAGE = {
   // Tant que l'IBAN est vide, seul le texte s'affiche (pas de bouton).
   // Une fois rempli, un bouton « Participer au voyage » dévoile les coordonnées.
   cadeau: {
-    titulaire: "",                 // ex. "Anaé Chevalier et Zachary Lebsira"
-    iban: "",                      // ex. "CH93 0076 2011 6238 5295 7"
-    banque: "",                    // ex. "UBS Switzerland AG" (facultatif)
+    titulaire: "Anaé Chevalier-Walther",
+    iban: "CH05 8080 8005 3135 8289 9",
+    banque: "Banque Raiffeisen Lausanne-Haute-Broye-Jorat",
+    bic: "RAIFCH22",                 // pour les virements depuis l'étranger
     communication: "Voyage de noces"
   },
 
